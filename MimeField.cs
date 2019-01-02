@@ -1,4 +1,4 @@
-﻿/*@
+/*@
     Copyright � Jannesen Holding B.V. 2002-2010.
     Unautorised reproduction, distribution or reverse eniginering is prohibited.
 */
@@ -126,8 +126,7 @@ namespace Jannesen.FileFormat.Mime
                     string      timezone  = dateparts[4];
                     day   = int.Parse(dateparts[0]);
 
-                    switch(dateparts[1].ToLower())
-                    {
+                    switch(dateparts[1].ToLower()) {
                     case "jan":     month =  1;                         break;
                     case "feb":     month =  2;                         break;
                     case "mar":     month =  3;                         break;
@@ -155,8 +154,7 @@ namespace Jannesen.FileFormat.Mime
                     if ((timezone[0]=='-' || timezone[0]=='+') && timezone.Length==5)
                         dt = dt.AddMinutes(-int.Parse(timezone.Substring(0, 3))*60 + int.Parse(timezone.Substring(3, 2)));
                     else {
-                        switch(timezone)
-                        {
+                        switch(timezone) {
                         case "(UTC)":                           break;
                         case "UT":                              break;
                         case "GMT":                             break;

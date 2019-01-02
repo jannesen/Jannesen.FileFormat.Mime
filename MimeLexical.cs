@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Jannesen.FileFormat.Mime
 {
@@ -41,8 +41,7 @@ namespace Jannesen.FileFormat.Mime
                 return rtn;
             }
 
-            switch(str[Position])
-            {
+            switch(str[Position]) {
             case ' ':
             case '\t':
             case '\n':

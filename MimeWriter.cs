@@ -1,4 +1,4 @@
-﻿/*@
+/*@
     Copyright � Jannesen Holding B.V. 2002-2010.
     Unautorised reproduction, distribution or reverse eniginering is prohibited.
 */
@@ -100,8 +100,7 @@ namespace Jannesen.FileFormat.Mime
         }
         public              void                WriteContent(byte[] content, int contentLength, MimeEncoding encoding)
         {
-            switch(encoding)
-            {
+            switch(encoding) {
             case MimeEncoding.Text:
             case MimeEncoding.Text7bit:
             case MimeEncoding.Text8bit:
@@ -150,8 +149,7 @@ namespace Jannesen.FileFormat.Mime
             for (int i = 0 ; i < contentLength ; ++i) {
                 byte b = content[i];
 
-                switch(b)
-                {
+                switch(b) {
                 case (byte)'\n':
                     WriteNewLine();
                     break;
@@ -179,8 +177,7 @@ namespace Jannesen.FileFormat.Mime
             for (int i = 0 ; i < contentLength ; ++i) {
                 byte    c = content[i];
 
-                switch(c)
-                {
+                switch(c) {
                 case (byte)' ':
                 case (byte)'\t':
                     if (i < contentLength -1 && content[i+1] != '\r')

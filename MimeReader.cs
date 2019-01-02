@@ -1,4 +1,4 @@
-﻿/*@
+/*@
     Copyright � Jannesen Holding B.V. 2002-2010.
     Unautorised reproduction, distribution or reverse eniginering is prohibited.
 */
@@ -81,8 +81,7 @@ namespace Jannesen.FileFormat.Mime
                         return dataStream.ToArray();
 
                     if (isLineEmpty) {
-                        switch(encoding)
-                        {
+                        switch(encoding) {
                         case MimeEncoding.Base64:
                         case MimeEncoding.UUEncode:
                             return dataStream.ToArray();
@@ -92,8 +91,7 @@ namespace Jannesen.FileFormat.Mime
                     if (boundary != null && TestBoundary(boundary) != 0)
                         return dataStream.ToArray();
 
-                    switch(encoding)
-                    {
+                    switch(encoding) {
                     case MimeEncoding.QuotedPrintable:  _decodeQuotedPrintableTo(dataStream);   break;
                     case MimeEncoding.Base64:           _decodeBase64To(dataStream);            break;
                     case MimeEncoding.UUEncode:         _decodeUUEncodeTo(dataStream);          break;

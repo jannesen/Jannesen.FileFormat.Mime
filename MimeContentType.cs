@@ -1,4 +1,4 @@
-﻿/*@
+/*@
     Copyright � Jannesen Holding B.V. 2002-2010.
     Unautorised reproduction, distribution or reverse eniginering is prohibited.
 */
@@ -132,8 +132,7 @@ namespace Jannesen.FileFormat.Mime
         }
         public  static      string              ToFileExtension(string ContentType)
         {
-            switch(ContentType)
-            {
+            switch(ContentType) {
             case MessageRFC822:                     return ".eml";
             case ApplicationZip:                    return ".zip";
             case ApplicationMSExcel:                return ".xls";

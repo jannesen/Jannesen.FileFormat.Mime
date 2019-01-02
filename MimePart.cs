@@ -1,4 +1,4 @@
-﻿/*@
+/*@
     Copyright � Jannesen Holding B.V. 2002-2010.
     Unautorised reproduction, distribution or reverse eniginering is prohibited.
 */
@@ -187,8 +187,7 @@ namespace Jannesen.FileFormat.Mime
         }
         public  static      string                  MimeEncodingToString(MimeEncoding encoding)
         {
-            switch(encoding)
-            {
+            switch(encoding) {
             case MimeEncoding.Text7bit:         return "7bit";
             case MimeEncoding.Text8bit:         return "8bit";
             case MimeEncoding.Binary:           return "binary";
