@@ -1,4 +1,4 @@
-/*@
+﻿/*@
     Copyright � Jannesen Holding B.V. 2002-2010.
     Unautorised reproduction, distribution or reverse eniginering is prohibited.
 */
