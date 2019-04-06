@@ -38,10 +38,31 @@ namespace Jannesen.FileFormat.Mime
             }
         }
 
-        public              void                WriteFieldName(string name)
+        public              void                WriteHeaderField(string name, string value)
         {
-            _write(name);
-            _write(": ");
+            if (value != null && value.Length > 0) {
+                _write(name);
+                _write(": ");
+
+                var encoding = _findCharset(value);
+
+                if (encoding != null)
+                    _writeEncoded(encoding, value);
+                else
+                    _write(value);
+
+                WriteNewLine();
+            }
+        }
+        public              void                WriteHeaderField(string name, IMimeWriterTo value)
+        {
+            if (value != null && value.WriteHasData) {
+                _write(name);
+                _write(": ");
+                value.WriteTo(this);
+                WriteNewLine();
+            }
+
         }
         public              void                WriteFieldValue(string value)
         {
@@ -67,8 +88,22 @@ namespace Jannesen.FileFormat.Mime
             _write(Value);
             _write('"');
         }
-        public              void                WriteAddress(string address)
+        public              void                WriteAddress(string address, string displayName)
         {
+            if (displayName != null)
+            {
+                _write('\"');
+
+                var encoding = _findCharset(displayName);
+
+                if (encoding != null)
+                    _writeEncoded(encoding, displayName);
+                else
+                    _write(displayName.Replace("\"", "\\\""));
+
+                _write("\" ");
+            }
+
             _write('<');
             _write(address);
             _write('>');
@@ -78,19 +113,6 @@ namespace Jannesen.FileFormat.Mime
             _write(',');
             WriteNewLine();
             _write('\t');
-        }
-        public              void                WriteDisplayName(string displayName)
-        {
-            _write('\"');
-
-            Encoding    encoding = _findCharset(displayName);
-
-            if (encoding != null)
-                _writeEncoded(encoding, displayName);
-            else
-                _write(displayName.Replace("\"", "\\\""));
-
-            _write("\" ");
         }
         public              void                WriteBody(string body)
         {

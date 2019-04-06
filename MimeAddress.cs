@@ -183,10 +183,7 @@ namespace Jannesen.FileFormat.Mime
         }
         public              void                WriteTo(MimeWriter writer)
         {
-            if (_displayName != null)
-                writer.WriteDisplayName(_displayName);
-
-            writer.WriteAddress(_address);
+            writer.WriteAddress(_address, _displayName);
         }
 
         public  override    string              ToString()

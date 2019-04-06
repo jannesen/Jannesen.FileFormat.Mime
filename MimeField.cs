@@ -206,22 +206,11 @@ namespace Jannesen.FileFormat.Mime
         public              void                    WriteTo(MimeWriter writer)
         {
             if (_name != "Bcc") {
-                if (_valueObject is IMimeWriterTo) {
-                    if (((IMimeWriterTo)_valueObject).WriteHasData) {
-                        writer.WriteFieldName(_name);
-                        ((IMimeWriterTo)_valueObject).WriteTo(writer);
-                        writer.WriteNewLine();
-                    }
+                if (_valueObject is IMimeWriterTo value) {
+                    writer.WriteHeaderField(_name, value);
                 }
-                else
-                if (_value != null) {
-                    string v = Value;
-
-                    if (v.Length > 0) {
-                        writer.WriteFieldName(_name);
-                        writer.WriteFieldValue(v);
-                        writer.WriteNewLine();
-                    }
+                else {
+                    writer.WriteHeaderField(_name, _value);
                 }
             }
         }
