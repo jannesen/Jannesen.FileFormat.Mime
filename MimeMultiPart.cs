@@ -1,14 +1,10 @@
-﻿/*@
-    Copyright � Jannesen Holding B.V. 2002-2010.
-    Unautorised reproduction, distribution or reverse eniginering is prohibited.
-*/
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 
 namespace Jannesen.FileFormat.Mime
 {
-    public class MimeMultiPart : MimePart
+    public class MimeMultiPart: MimePart
     {
         private             MimeParts           _parts;
 
@@ -32,6 +28,9 @@ namespace Jannesen.FileFormat.Mime
 
         protected           void                ParseMultiPart(MimeContentType contentType, MimeReader reader, StringWriter bodyWriter)
         {
+            if (contentType is null) throw new ArgumentNullException(nameof(contentType));
+            if (reader is null)      throw new ArgumentNullException(nameof(reader));
+
             _parts   = new MimeParts();
 
             string Boundary = contentType.Boundary;
@@ -77,13 +76,13 @@ namespace Jannesen.FileFormat.Mime
             _parts.SetCollectionReadOnly();
         }
 
-        public  new         bool                WriteHasData
+        public   new        bool                WriteHasData
         {
             get {
                 return (_parts != null && _parts.Count > 0) || base.WriteHasData;
             }
         }
-        public  override    void                WriteContentTo(MimeWriter writer)
+        internal override   void                WriteContentTo(MimeWriter writer)
         {
             MimeField   FldContentType = Fields["Content-Type"];
 

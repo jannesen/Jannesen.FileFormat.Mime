@@ -2,7 +2,7 @@
 
 namespace Jannesen.FileFormat.Mime
 {
-    public enum MimeLexicalTokenType
+    internal enum MimeLexicalTokenType
     {
         None            = 0,
         EOL,
@@ -22,7 +22,7 @@ namespace Jannesen.FileFormat.Mime
         Assign
     }
 
-    public struct MimeLexicalToken
+    internal struct MimeLexicalToken
     {
         public          MimeLexicalTokenType    Type;
         public          int                     Begin;

@@ -1,8 +1,5 @@
-﻿/*@
-    Copyright � Jannesen Holding B.V. 2002-2010.
-    Unautorised reproduction, distribution or reverse eniginering is prohibited.
-*/
-using System;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Jannesen.FileFormat.Mime
 {
@@ -10,6 +7,9 @@ namespace Jannesen.FileFormat.Mime
     public  class MimeException: Exception
     {
         public                      MimeException(string Message) : base("Mail message corrupt: "+Message)
+        {
+        }
+        protected                   MimeException(SerializationInfo info, StreamingContext context): base(info, context)
         {
         }
 

@@ -1,8 +1,4 @@
-﻿/*@
-    Copyright � Jannesen Holding B.V. 2002-2010.
-    Unautorised reproduction, distribution or reverse eniginering is prohibited.
-*/
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -18,15 +14,15 @@ namespace Jannesen.FileFormat.Mime
             _readOnly = false;
         }
 
-        public  static      MimeAddresses       Parse(string mimeAddressesString)
+        internal static     MimeAddresses       Parse(string mimeAddressesString)
         {
             return Parse(mimeAddressesString, false);
         }
-        public  static      MimeAddresses       Parse(string mimeAddressesString, bool readOnly)
+        internal static     MimeAddresses       Parse(string mimeAddressesString, bool readOnly)
         {
-            if (mimeAddressesString == null) {
+            if (mimeAddressesString is null) {
                 if (readOnly)
-                    throw new ArgumentNullException("MimeAddressesString");
+                    throw new ArgumentNullException(nameof(mimeAddressesString));
 
                 return new MimeAddresses();
             }

@@ -1,8 +1,4 @@
-﻿/*@
-    Copyright � Jannesen Holding B.V. 2002-2010.
-    Unautorised reproduction, distribution or reverse eniginering is prohibited.
-*/
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -50,7 +46,7 @@ namespace Jannesen.FileFormat.Mime
         public              bool                isMultipart
         {
             get {
-                return Type.Length>10 && string.Compare(Type, 0, "multipart/", 0, 10, true)==0;
+                return Type.Length>10 && string.Compare(Type, 0, "multipart/", 0, 10, StringComparison.CurrentCultureIgnoreCase)==0;
             }
         }
         public              string              Boundary
@@ -102,11 +98,11 @@ namespace Jannesen.FileFormat.Mime
                 Boundary = "boundary_" + System.Guid.NewGuid().ToString().Replace("-", "");
         }
 
-        public  static new  MimeContentType     Parse(string mimeValue)
+        internal static new MimeContentType     Parse(string mimeValue)
         {
             return Parse(mimeValue, false);
         }
-        public  static new  MimeContentType     Parse(string mimeValue, bool readOnly)
+        internal static new MimeContentType     Parse(string mimeValue, bool readOnly)
         {
             MimeContentType     rtn = new MimeContentType();
 
@@ -119,14 +115,14 @@ namespace Jannesen.FileFormat.Mime
         {
             string  Extension = System.IO.Path.GetExtension(fileName);
 
-            if (string.Compare(Extension, ".eml", true) == 0)   return new MimeContentType(MessageRFC822);
-            if (string.Compare(Extension, ".zip", true) == 0)   return new MimeContentType(ApplicationZip);
-            if (string.Compare(Extension, ".edn", true) == 0)   return new MimeContentType(ApplicationEdifact);
-            if (string.Compare(Extension, ".xls", true) == 0)   return new MimeContentType(ApplicationMSExcel);
-            if (string.Compare(Extension, ".xml", true) == 0)   return new MimeContentType(TextXml);
-            if (string.Compare(Extension, ".xsl", true) == 0)   return new MimeContentType(TextXsl);
-            if (string.Compare(Extension, ".csv", true) == 0)   return new MimeContentType(TextCsv);
-            if (string.Compare(Extension, ".txt", true) == 0)   return new MimeContentType(TextPlain);
+            if (string.Compare(Extension, ".eml", StringComparison.CurrentCultureIgnoreCase) == 0)   return new MimeContentType(MessageRFC822);
+            if (string.Compare(Extension, ".zip", StringComparison.CurrentCultureIgnoreCase) == 0)   return new MimeContentType(ApplicationZip);
+            if (string.Compare(Extension, ".edn", StringComparison.CurrentCultureIgnoreCase) == 0)   return new MimeContentType(ApplicationEdifact);
+            if (string.Compare(Extension, ".xls", StringComparison.CurrentCultureIgnoreCase) == 0)   return new MimeContentType(ApplicationMSExcel);
+            if (string.Compare(Extension, ".xml", StringComparison.CurrentCultureIgnoreCase) == 0)   return new MimeContentType(TextXml);
+            if (string.Compare(Extension, ".xsl", StringComparison.CurrentCultureIgnoreCase) == 0)   return new MimeContentType(TextXsl);
+            if (string.Compare(Extension, ".csv", StringComparison.CurrentCultureIgnoreCase) == 0)   return new MimeContentType(TextCsv);
+            if (string.Compare(Extension, ".txt", StringComparison.CurrentCultureIgnoreCase) == 0)   return new MimeContentType(TextPlain);
 
             return new MimeContentType("application/x-extension-"+Extension.Substring(1));
         }
@@ -152,6 +148,8 @@ namespace Jannesen.FileFormat.Mime
 
         public  static      MimeContentType     MapContentType(string fileName, MimeContentType contentType)
         {
+            if (contentType is null) throw new ArgumentNullException(nameof(contentType));
+
             if (contentType.Type == ApplicationOctetStream && fileName != null)
                 return FromFileExtension(fileName);
 

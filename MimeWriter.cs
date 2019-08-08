@@ -1,8 +1,4 @@
-﻿/*@
-    Copyright � Jannesen Holding B.V. 2002-2010.
-    Unautorised reproduction, distribution or reverse eniginering is prohibited.
-*/
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 
@@ -27,18 +23,17 @@ namespace Jannesen.FileFormat.Mime
 
         public                                  MimeWriter(Stream stream)
         {
-            _writer = new StreamWriter(stream, System.Text.Encoding.ASCII);
+            _writer = new StreamWriter(stream, System.Text.Encoding.ASCII, 4096, true);
         }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_writer")] // .Net 4 StreamWriter don't support leaveOpen
         public              void                Dispose()
         {
             if (_writer != null) {
-                _writer.Flush();
+                _writer.Dispose();
                 _writer = null;
             }
         }
 
-        public              void                WriteHeaderField(string name, string value)
+        internal            void                WriteHeaderField(string name, string value)
         {
             if (value != null && value.Length > 0) {
                 _write(name);
@@ -54,7 +49,7 @@ namespace Jannesen.FileFormat.Mime
                 WriteNewLine();
             }
         }
-        public              void                WriteHeaderField(string name, IMimeWriterTo value)
+        internal            void                WriteHeaderField(string name, IMimeWriterTo value)
         {
             if (value != null && value.WriteHasData) {
                 _write(name);
@@ -64,11 +59,11 @@ namespace Jannesen.FileFormat.Mime
             }
 
         }
-        public              void                WriteFieldValue(string value)
+        internal            void                WriteFieldValue(string value)
         {
             _write(value);
         }
-        public              void                WriteFieldParameter(MimeField parameter)
+        internal            void                WriteFieldParameter(MimeField parameter)
         {
             string  Name  = parameter.Name;
             string  Value = parameter.Value.Replace("\"", "\"\"");
@@ -88,7 +83,7 @@ namespace Jannesen.FileFormat.Mime
             _write(Value);
             _write('"');
         }
-        public              void                WriteAddress(string address, string displayName)
+        internal            void                WriteAddress(string address, string displayName)
         {
             if (displayName != null)
             {
@@ -108,19 +103,19 @@ namespace Jannesen.FileFormat.Mime
             _write(address);
             _write('>');
         }
-        public              void                WriteAddressSep()
+        internal            void                WriteAddressSep()
         {
             _write(',');
             WriteNewLine();
             _write('\t');
         }
-        public              void                WriteBody(string body)
+        internal            void                WriteBody(string body)
         {
             byte[]  b = System.Text.Encoding.ASCII.GetBytes(body);
 
             _writeContent_Text(b, b.Length);
         }
-        public              void                WriteContent(byte[] content, int contentLength, MimeEncoding encoding)
+        internal            void                WriteContent(byte[] content, int contentLength, MimeEncoding encoding)
         {
             switch(encoding) {
             case MimeEncoding.Text:
@@ -141,7 +136,7 @@ namespace Jannesen.FileFormat.Mime
                 throw new NotImplementedException("Not implemented WriteContent '"+encoding.ToString()+"' not implemented.");
             }
         }
-        public              void                WriteBoundary(string boundary, bool end)
+        internal            void                WriteBoundary(string boundary, bool end)
         {
             _write("--");
             _write(boundary);
@@ -151,16 +146,16 @@ namespace Jannesen.FileFormat.Mime
 
             WriteNewLine();
         }
-        public              void                WriteMimeText()
+        internal            void                WriteMimeText()
         {
             _write("This is a multi-part message in MIME format.\r\n\r\n");
         }
-        public              void                WriteNewLine()
+        internal            void                WriteNewLine()
         {
             _write("\r\n");
             _linePos = 0;
         }
-        public              void                WriteSoftNewLine()
+        internal            void                WriteSoftNewLine()
         {
             _write("=\r\n");
             _linePos = 0;
@@ -297,7 +292,7 @@ encode:             {
             if (w > 0)
                 WriteNewLine();
         }
-        private             Encoding            _findCharset(string str)
+        private static      Encoding            _findCharset(string str)
         {
             for (int i = 0 ; i < str.Length ; ++i) {
                 if (str[i] >= 0x7F) {

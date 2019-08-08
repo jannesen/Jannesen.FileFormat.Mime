@@ -1,8 +1,4 @@
-﻿/*@
-    Copyright � Jannesen Holding B.V. 2002-2010.
-    Unautorised reproduction, distribution or reverse eniginering is prohibited.
-*/
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 using System.Runtime.InteropServices;
@@ -12,7 +8,7 @@ namespace Jannesen.FileFormat.Mime
     public class MimeMessage: MimeMultiPart
     {
         private             string              _body;
-        private             string              _messageGUID;
+        private readonly    string              _messageGUID;
 
         public              string              Body
         {
@@ -76,7 +72,7 @@ namespace Jannesen.FileFormat.Mime
                 if (fld == null)
                     fld = Fields["From"];
 
-                return (fld != null) ? fld.ValueAddress : null;
+                return fld?.ValueAddress;
             }
             set {
                 Fields.Set("Sender").ValueAddress = value;
@@ -93,7 +89,7 @@ namespace Jannesen.FileFormat.Mime
                 if (fld == null)
                     fld = Fields["From"];
 
-                return (fld != null) ? fld.ValueAddress : null;
+                return fld?.ValueAddress;
             }
             set {
                 Fields.Set("Reply-To").ValueAddress = value;
@@ -104,7 +100,7 @@ namespace Jannesen.FileFormat.Mime
             get {
                 string      ID = Fields.Value("Message-ID");
 
-                if (ID != null && ID.StartsWith("<") && ID.EndsWith(">"))
+                if (ID != null && ID.StartsWith("<", StringComparison.InvariantCulture) && ID.EndsWith(">", StringComparison.InvariantCulture))
                     ID = ID.Substring(1, ID.Length - 2);
 
                 return ID;
@@ -155,14 +151,18 @@ namespace Jannesen.FileFormat.Mime
             Fields.Add(new MimeField("Subject",    null));
             this.Date = DateTime.UtcNow;
         }
+
         public                                  MimeMessage(string fileName) : this(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read), true)
         {
         }
+
         public                                  MimeMessage(Stream stream) : this(stream, false)
         {
         }
         public                                  MimeMessage(Stream stream, bool closeStream)
         {
+            if (stream is null) throw new ArgumentNullException(nameof(stream));
+
             try {
                 _parseMessage(stream);
             }
@@ -233,7 +233,6 @@ namespace Jannesen.FileFormat.Mime
             Fields.SetCollectionReadOnly();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1060:MovePInvokesToNativeMethodsClass")]
         [DllImport("kernel32.dll", SetLastError=true, CharSet=CharSet.Unicode)]
         static extern Int32 GetComputerNameEx(Int32 NameType, StringBuilder lpBuffer, ref Int32 lpnSize);
     }

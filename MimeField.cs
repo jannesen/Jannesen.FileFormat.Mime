@@ -1,19 +1,16 @@
-﻿/*@
-    Copyright � Jannesen Holding B.V. 2002-2010.
-    Unautorised reproduction, distribution or reverse eniginering is prohibited.
-*/
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace Jannesen.FileFormat.Mime
 {
     public  class MimeField
     {
-        private             string                  _name;
+        private readonly    string                  _name;
         private             string                  _value;
         private             object                  _valueObject;
-        private             bool                    _readOnly;
+        private readonly    bool                    _readOnly;
 
         public              string                  Name
         {
@@ -124,9 +121,9 @@ namespace Jannesen.FileFormat.Mime
                     string[]    dateparts = str.Split(' ');
                     string[]    timeparts = dateparts[3].Split(':');
                     string      timezone  = dateparts[4];
-                    day   = int.Parse(dateparts[0]);
+                    day   = int.Parse(dateparts[0], System.Globalization.NumberStyles.Integer, CultureInfo.InvariantCulture);
 
-                    switch(dateparts[1].ToLower()) {
+                    switch(dateparts[1].ToLowerInvariant()) {
                     case "jan":     month =  1;                         break;
                     case "feb":     month =  2;                         break;
                     case "mar":     month =  3;                         break;
@@ -139,20 +136,20 @@ namespace Jannesen.FileFormat.Mime
                     case "oct":     month = 10;                         break;
                     case "nov":     month = 11;                         break;
                     case "dec":     month = 12;                         break;
-                    default:        month = int.Parse(dateparts[1]);    break;
+                    default:        month = int.Parse(dateparts[1], System.Globalization.NumberStyles.Integer, CultureInfo.InvariantCulture);    break;
                     }
 
-                    year  = int.Parse(dateparts[2]);
+                    year  = int.Parse(dateparts[2], System.Globalization.NumberStyles.Integer, CultureInfo.InvariantCulture);
 
                     if (year<100) year = (year>70) ? 1900+year:2000+year;
 
-                    DateTime    dt = new DateTime(year, month, day, int.Parse(timeparts[0]), int.Parse(timeparts[1]), 0);
+                    DateTime    dt = new DateTime(year, month, day, int.Parse(timeparts[0], System.Globalization.NumberStyles.Integer, CultureInfo.InvariantCulture), int.Parse(timeparts[1], System.Globalization.NumberStyles.Integer, CultureInfo.InvariantCulture), 0);
 
                     if (timeparts.Length>2)
-                        dt = dt.AddSeconds(double.Parse(timeparts[2], System.Globalization.CultureInfo.InvariantCulture));
+                        dt = dt.AddSeconds(double.Parse(timeparts[2], CultureInfo.InvariantCulture));
 
                     if ((timezone[0]=='-' || timezone[0]=='+') && timezone.Length==5)
-                        dt = dt.AddMinutes(-int.Parse(timezone.Substring(0, 3))*60 + int.Parse(timezone.Substring(3, 2)));
+                        dt = dt.AddMinutes(-int.Parse(timezone.Substring(0, 3), System.Globalization.NumberStyles.Integer, CultureInfo.InvariantCulture)*60 + int.Parse(timezone.Substring(3, 2), System.Globalization.NumberStyles.Integer, CultureInfo.InvariantCulture));
                     else {
                         switch(timezone) {
                         case "(UTC)":                           break;
@@ -182,7 +179,7 @@ namespace Jannesen.FileFormat.Mime
                 }
             }
             set {
-                _value = value.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
+                _value = value.ToString("R", CultureInfo.InvariantCulture);
             }
         }
 
@@ -203,7 +200,7 @@ namespace Jannesen.FileFormat.Mime
         {
             return _name + ": " + Value;
         }
-        public              void                    WriteTo(MimeWriter writer)
+        internal            void                    WriteTo(MimeWriter writer)
         {
             if (_name != "Bcc") {
                 if (_valueObject is IMimeWriterTo value) {
@@ -224,7 +221,7 @@ namespace Jannesen.FileFormat.Mime
         {
             get {
                 for (int i = 0 ; i < Count ; ++i) {
-                    if (string.Compare(base[i].Name, name, true)==0)
+                    if (string.Compare(base[i].Name, name, StringComparison.CurrentCultureIgnoreCase)==0)
                         return base[i];
                 }
 
@@ -339,7 +336,7 @@ namespace Jannesen.FileFormat.Mime
             List<string>    rtn = new List<string>();
 
             for (int i = 0 ; i < Count ; ++i) {
-                if (string.Compare(base[i].Name, name, true)==0)
+                if (string.Compare(base[i].Name, name, StringComparison.CurrentCultureIgnoreCase)==0)
                     rtn.Add(base[i].Value);
             }
 
@@ -351,7 +348,7 @@ namespace Jannesen.FileFormat.Mime
             _readOnly = true;
         }
 
-        public              void                    WriteTo(MimeWriter writer)
+        internal            void                    WriteTo(MimeWriter writer)
         {
             for (int i = 0 ; i < Count ; ++i)
                 base[i].WriteTo(writer);

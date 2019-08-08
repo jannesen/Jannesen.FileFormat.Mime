@@ -1,8 +1,4 @@
-﻿/*@
-    Copyright � Jannesen Holding B.V. 2002-2010.
-    Unautorised reproduction, distribution or reverse eniginering is prohibited.
-*/
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 
@@ -10,29 +6,29 @@ namespace Jannesen.FileFormat.Mime
 {
     public sealed class MimeReader
     {
-        private         Stream          _stream;
-        private         int             _unChar;
-        private         int             _position;
-        private         int             _positionBeginMessage;
-        private         char[]          _curLine;
-        private         int             _curLength;
-        private         byte[]          _decode_buf_in;
-        private         byte[]          _decode_buf_out;
+        private readonly    Stream          _stream;
+        private             int             _unChar;
+        private             int             _position;
+        private             int             _positionBeginMessage;
+        private readonly    char[]          _curLine;
+        private             int             _curLength;
+        private readonly    byte[]          _decode_buf_in;
+        private readonly    byte[]          _decode_buf_out;
 
-        public          int             PositionBeginMessage
+        public              int             PositionBeginMessage
         {
             get {
                 return _positionBeginMessage;
             }
         }
-        public          bool            isLineEmpty
+        public              bool            isLineEmpty
         {
             get {
                 return _curLength == 0;
             }
         }
 
-        public                          MimeReader(Stream stream)
+        public                              MimeReader(Stream stream)
         {
             _stream               = stream;
             _unChar               = -1;
@@ -44,7 +40,7 @@ namespace Jannesen.FileFormat.Mime
             _decode_buf_out       = new byte[3];
         }
 
-        public          MimeFields      ReadFields()
+        public              MimeFields      ReadFields()
         {
             bool            xheader = true;
             MimeFields      fields  = new MimeFields();
@@ -61,7 +57,7 @@ namespace Jannesen.FileFormat.Mime
                 string  Value = _curLineToString(i+2, _curLength-(i+2));
 
                 if (xheader) {
-                    if (Name.StartsWith("x-"))
+                    if (Name.StartsWith("x-", StringComparison.InvariantCulture))
                         _positionBeginMessage = _position;
                     else
                         xheader = false;
@@ -72,7 +68,7 @@ namespace Jannesen.FileFormat.Mime
 
             return fields;
         }
-        public          byte[]          ReadData(MimeEncoding encoding, string boundary)
+        public              byte[]          ReadData(MimeEncoding encoding, string boundary)
         {
             using(MemoryStream dataStream = new MemoryStream())
             {
@@ -101,7 +97,7 @@ namespace Jannesen.FileFormat.Mime
             }
         }
 
-        public          bool            ReadLine(bool unfolding)
+        public              bool            ReadLine(bool unfolding)
         {
             int     pos = 0;
             int     c;
@@ -155,7 +151,7 @@ namespace Jannesen.FileFormat.Mime
 
             return (c != -1 || pos > 0);
         }
-        public          int             TestBoundary(string boundary)
+        internal            int             TestBoundary(string boundary)
         {
             if (_curLength < 2+boundary.Length)
                 return 0;
@@ -178,21 +174,25 @@ namespace Jannesen.FileFormat.Mime
 
             return 0;
         }
-        public          void            WriteLineTo(StringWriter content)
+        internal            void            WriteLineTo(StringWriter content)
         {
             content.WriteLine(_curLine, 0, _curLength);
         }
 
-        public          void            _decodeTextTo(MemoryStream content)
+        private             void            _decodeTextTo(MemoryStream content)
         {
+            if (content is null) throw new ArgumentNullException(nameof(content));
+
             for (int i = 0 ; i < _curLength ; ++i)
                 content.WriteByte((byte)_curLine[i]);
 
             content.WriteByte((byte)'\r');
             content.WriteByte((byte)'\n');
         }
-        public          void            _decodeQuotedPrintableTo(MemoryStream content)
+        private             void            _decodeQuotedPrintableTo(MemoryStream content)
         {
+            if (content is null) throw new ArgumentNullException(nameof(content));
+
             int     pos = 0;
 
             while (pos<_curLength) {
@@ -213,8 +213,10 @@ namespace Jannesen.FileFormat.Mime
             content.WriteByte((byte)'\r');
             content.WriteByte((byte)'\n');
         }
-        public          void            _decodeBase64To(MemoryStream content)
+        private             void            _decodeBase64To(MemoryStream content)
         {
+            if (content is null) throw new ArgumentNullException(nameof(content));
+
             int     pos = 0;
 
             while (pos<_curLength) {
@@ -258,8 +260,10 @@ namespace Jannesen.FileFormat.Mime
                 content.Write(_decode_buf_out, 0, n);
             }
         }
-        public          void            _decodeUUEncodeTo(MemoryStream content)
+        private             void            _decodeUUEncodeTo(MemoryStream content)
         {
+            if (content is null) throw new ArgumentNullException(nameof(content));
+
             if (_curLength>0) {
                 int     pos = 1;
                 int     n   = (_curLine[0] - 32);
@@ -290,7 +294,7 @@ namespace Jannesen.FileFormat.Mime
             }
         }
 
-        private         int             _curLineIndexOf(char chr)
+        private             int             _curLineIndexOf(char chr)
         {
             for (int i=0 ; i<_curLength ; ++i) {
                 if (_curLine[i] == chr)
@@ -299,7 +303,7 @@ namespace Jannesen.FileFormat.Mime
 
             return -1;
         }
-        private         string          _curLineToString(int offset, int length)
+        private             string          _curLineToString(int offset, int length)
         {
             if (length>0)
                 return new string(_curLine, offset, length);
@@ -307,7 +311,7 @@ namespace Jannesen.FileFormat.Mime
                 return string.Empty;
         }
 
-        private static  byte            _hexCharToNibble(char c)
+        private static      byte            _hexCharToNibble(char c)
         {
             if (c >= '0' && c <= '9')       return (byte)(c - '0'     );
             if (c >= 'A' && c <= 'F')       return (byte)(c - 'A' + 10);

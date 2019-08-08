@@ -1,8 +1,4 @@
-﻿/*@
-    Copyright � Jannesen Holding B.V. 2002-2010.
-    Unautorised reproduction, distribution or reverse eniginering is prohibited.
-*/
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -21,7 +17,7 @@ namespace Jannesen.FileFormat.Mime
         public              bool                    isAttachment
         {
             get {
-                return string.Compare(Type, Attachment, true)==0;
+                return string.Compare(Type, Attachment, StringComparison.CurrentCultureIgnoreCase)==0;
             }
             set {
                 SetType(Attachment);

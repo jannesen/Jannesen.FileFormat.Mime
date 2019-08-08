@@ -1,8 +1,4 @@
-﻿/*@
-    Copyright � Jannesen Holding B.V. 2002-2010.
-    Unautorised reproduction, distribution or reverse eniginering is prohibited.
-*/
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -51,11 +47,11 @@ namespace Jannesen.FileFormat.Mime
             _readOnly = false;
         }
 
-        public  static      MimeParameterField  Parse(string mimeValue)
+        internal static     MimeParameterField  Parse(string mimeValue)
         {
             return Parse(mimeValue, false);
         }
-        public  static      MimeParameterField  Parse(string mimeValue, bool readOnly)
+        internal static     MimeParameterField  Parse(string mimeValue, bool readOnly)
         {
             MimeParameterField      rtn = new MimeParameterField();
 
@@ -72,6 +68,8 @@ namespace Jannesen.FileFormat.Mime
         }
         public              void                WriteTo(MimeWriter writer)
         {
+            if (writer is null) throw new ArgumentNullException(nameof(writer));
+
             writer.WriteFieldValue(_type);
 
             if (_parameters != null) {
@@ -110,9 +108,9 @@ namespace Jannesen.FileFormat.Mime
         {
             int         Position = 0;
 
-            if (mimeValue == null) {
+            if (mimeValue is null) {
                 if (readOnly)
-                    throw new ArgumentNullException("MimeValue");
+                    throw new ArgumentNullException(nameof(mimeValue));
 
                 return;
             }

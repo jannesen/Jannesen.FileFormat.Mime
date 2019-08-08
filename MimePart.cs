@@ -1,8 +1,4 @@
-﻿/*@
-    Copyright � Jannesen Holding B.V. 2002-2010.
-    Unautorised reproduction, distribution or reverse eniginering is prohibited.
-*/
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -109,11 +105,14 @@ namespace Jannesen.FileFormat.Mime
             _fields    = new MimeFields();
             _content   = null;
         }
-        public                                      MimePart(MimeFields Fields, byte[] Content)
+        public                                      MimePart(MimeFields fields, byte[] content)
         {
-            _fields        = Fields;
-            _content       = Content;
-            _contentLength = Content.Length;
+            if (fields is null) throw new ArgumentNullException(nameof(fields));
+            if (content is null) throw new ArgumentNullException(nameof(content));
+
+            _fields        = fields;
+            _content       = content;
+            _contentLength = content.Length;
         }
 
         public              Stream                  GetContentStream()
@@ -122,6 +121,8 @@ namespace Jannesen.FileFormat.Mime
         }
         public              void                    SetTextContent(string text, System.Text.Encoding encoding)
         {
+            if (encoding is null) throw new ArgumentNullException(nameof(encoding));
+
             ContentType = MimeContentType.NewTextPlain();
             ContentType.Charset = encoding.BodyName;
             ContentTransferEncoding = (encoding.BodyName == "us-ascii") ? MimeEncoding.Text7bit : MimeEncoding.QuotedPrintable;
@@ -134,6 +135,8 @@ namespace Jannesen.FileFormat.Mime
         }
         public              void                    SetContentFromFile(Stream stream)
         {
+            if (stream is null) throw new ArgumentNullException(nameof(stream));
+
             byte[]  buf = new byte[4096];
             int     rs;
 
@@ -147,6 +150,8 @@ namespace Jannesen.FileFormat.Mime
         }
         public              void                    SetContent(byte[] content)
         {
+            if (content is null) throw new ArgumentNullException(nameof(content));
+
             SetContent(content, content.Length);
         }
         public              void                    SetContent(byte[] content, int length)
@@ -160,15 +165,15 @@ namespace Jannesen.FileFormat.Mime
 
         public  static      MimePart                NewAttachment(string name, MimeContentType contentType, byte[] data, int length)
         {
-            MimePart    Part = new MimePart();
+            MimePart    part = new MimePart() { 
+                                   ContentType             = contentType,
+                                   ContentDisposition      = MimeContentDisposition.NewAttachment(name),
+                                   ContentTransferEncoding = MimeEncoding.Base64
+                               };
+            part.ContentType.Name = name;
+            part.SetContent(data, length);
 
-            Part.ContentType             = contentType;
-            Part.ContentType.Name        = name;
-            Part.ContentDisposition      = MimeContentDisposition.NewAttachment(name);
-            Part.ContentTransferEncoding = MimeEncoding.Base64;
-            Part.SetContent(data, length);
-
-            return Part;
+            return part;
         }
 
         public  static      MimeEncoding            StringToMimeEncoding(string encodingText)
@@ -176,12 +181,12 @@ namespace Jannesen.FileFormat.Mime
             if (encodingText == null)
                 return MimeEncoding.Text;
 
-            if (string.Compare(encodingText, "7bit",                true)==0)   return MimeEncoding.Text7bit;
-            if (string.Compare(encodingText, "8bit",                true)==0)   return MimeEncoding.Text8bit;
-            if (string.Compare(encodingText, "binary",              true)==0)   return MimeEncoding.Binary;
-            if (string.Compare(encodingText, "quoted-printable",    true)==0)   return MimeEncoding.QuotedPrintable;
-            if (string.Compare(encodingText, "base64",              true)==0)   return MimeEncoding.Base64;
-            if (string.Compare(encodingText, "uuencode",            true)==0)   return MimeEncoding.UUEncode;
+            if (string.Compare(encodingText, "7bit",                StringComparison.CurrentCultureIgnoreCase)==0)   return MimeEncoding.Text7bit;
+            if (string.Compare(encodingText, "8bit",                StringComparison.CurrentCultureIgnoreCase)==0)   return MimeEncoding.Text8bit;
+            if (string.Compare(encodingText, "binary",              StringComparison.CurrentCultureIgnoreCase)==0)   return MimeEncoding.Binary;
+            if (string.Compare(encodingText, "quoted-printable",    StringComparison.CurrentCultureIgnoreCase)==0)   return MimeEncoding.QuotedPrintable;
+            if (string.Compare(encodingText, "base64",              StringComparison.CurrentCultureIgnoreCase)==0)   return MimeEncoding.Base64;
+            if (string.Compare(encodingText, "uuencode",            StringComparison.CurrentCultureIgnoreCase)==0)   return MimeEncoding.UUEncode;
 
             return MimeEncoding.Unknown;
         }
@@ -203,7 +208,7 @@ namespace Jannesen.FileFormat.Mime
             _fields = fields;
         }
 
-        public              bool                    WriteHasData
+        public   virtual    bool                    WriteHasData
         {
             get {
                 return (_fields != null && _fields.Count > 0) || _content != null;
@@ -211,6 +216,8 @@ namespace Jannesen.FileFormat.Mime
         }
         public              void                    WriteTo(MimeWriter writer)
         {
+            if (writer is null) throw new ArgumentNullException(nameof(writer));
+
             Fields.WriteTo(writer);
             writer.WriteNewLine();
 
@@ -219,8 +226,10 @@ namespace Jannesen.FileFormat.Mime
 
             WriteContentTo(writer);
         }
-        public  virtual     void                    WriteContentTo(MimeWriter writer)
+        internal virtual    void                    WriteContentTo(MimeWriter writer)
         {
+            if (writer is null) throw new ArgumentNullException(nameof(writer));
+
             writer.WriteContent(_content, _contentLength, ContentTransferEncoding);
         }
 

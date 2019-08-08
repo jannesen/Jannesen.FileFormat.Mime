@@ -9,7 +9,7 @@ namespace Jannesen.FileFormat.Mime
     {
         private             string              _address;
         private             string              _displayName;
-        private             bool                _readOnly;
+        private readonly    bool                _readOnly;
 
         public              string              Address
         {
@@ -56,15 +56,15 @@ namespace Jannesen.FileFormat.Mime
             _readOnly    = readOnly;
         }
 
-        public  static      MimeAddress         Parse(string mimeAddressString)
+        internal static     MimeAddress         Parse(string mimeAddressString)
         {
             return Parse(mimeAddressString, false);
         }
-        public  static      MimeAddress         Parse(string mimeAddressString, bool readOnly)
+        internal static     MimeAddress         Parse(string mimeAddressString, bool readOnly)
         {
             if (mimeAddressString == null) {
                 if (readOnly)
-                    throw new ArgumentNullException("MimeAddressString");
+                    throw new ArgumentNullException(nameof(mimeAddressString));
 
                 return new MimeAddress();
             }
@@ -83,11 +83,11 @@ namespace Jannesen.FileFormat.Mime
                 throw new MimeException("Invalid address '"+mimeAddressString+"', "+err.Message);
             }
         }
-        public  static      MimeAddress         Parse(string mimeAddressString, ref int position, bool readOnly)
+        internal static     MimeAddress         Parse(string mimeAddressString, ref int position, bool readOnly)
         {
             MimeLexicalToken    addressesToken      = new MimeLexicalToken();
             MimeLexicalToken    displayNameToken    = new MimeLexicalToken();
-            MimeLexicalToken    tempToken           = new MimeLexicalToken();
+            MimeLexicalToken    tempToken;
             MimeLexicalToken    curToken;
 
             curToken = MimeLexicalToken.Parse(mimeAddressString, ref position);
