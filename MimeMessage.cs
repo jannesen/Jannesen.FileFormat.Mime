@@ -179,8 +179,7 @@ namespace Jannesen.FileFormat.Mime
         }
         public              void                WriteTo(Stream stream)
         {
-            using(MimeWriter Writer = new MimeWriter(stream))
-            {
+            using(MimeWriter Writer = new MimeWriter(stream)) {
                 if (WriteHasData) {
                     WriteTo(Writer);
                 }

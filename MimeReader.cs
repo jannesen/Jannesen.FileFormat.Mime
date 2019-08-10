@@ -70,8 +70,7 @@ namespace Jannesen.FileFormat.Mime
         }
         public              byte[]          ReadData(MimeEncoding encoding, string boundary)
         {
-            using(MemoryStream dataStream = new MemoryStream())
-            {
+            using(MemoryStream dataStream = new MemoryStream()) {
                 while (true) {
                     if (!ReadLine(false))
                         return dataStream.ToArray();

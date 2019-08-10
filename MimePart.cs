@@ -140,8 +140,7 @@ namespace Jannesen.FileFormat.Mime
             byte[]  buf = new byte[4096];
             int     rs;
 
-            using (MemoryStream content = new MemoryStream())
-            {
+            using (MemoryStream content = new MemoryStream()) {
                 while ((rs = stream.Read(buf, 0, buf.Length)) > 0)
                     content.Write(buf, 0, rs);
 
@@ -165,7 +164,7 @@ namespace Jannesen.FileFormat.Mime
 
         public  static      MimePart                NewAttachment(string name, MimeContentType contentType, byte[] data, int length)
         {
-            MimePart    part = new MimePart() { 
+            MimePart    part = new MimePart() {
                                    ContentType             = contentType,
                                    ContentDisposition      = MimeContentDisposition.NewAttachment(name),
                                    ContentTransferEncoding = MimeEncoding.Base64

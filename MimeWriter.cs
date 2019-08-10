@@ -85,8 +85,7 @@ namespace Jannesen.FileFormat.Mime
         }
         internal            void                WriteAddress(string address, string displayName)
         {
-            if (displayName != null)
-            {
+            if (displayName != null) {
                 _write('\"');
 
                 var encoding = _findCharset(displayName);
