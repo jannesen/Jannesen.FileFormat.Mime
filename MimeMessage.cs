@@ -100,7 +100,7 @@ namespace Jannesen.FileFormat.Mime
             get {
                 string      ID = Fields.Value("Message-ID");
 
-                if (ID != null && ID.StartsWith("<", StringComparison.InvariantCulture) && ID.EndsWith(">", StringComparison.InvariantCulture))
+                if (ID != null && ID.StartsWith("<", StringComparison.Ordinal) && ID.EndsWith(">", StringComparison.Ordinal))
                     ID = ID.Substring(1, ID.Length - 2);
 
                 return ID;

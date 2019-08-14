@@ -46,7 +46,7 @@ namespace Jannesen.FileFormat.Mime
         public              bool                isMultipart
         {
             get {
-                return Type.Length>10 && string.Compare(Type, 0, "multipart/", 0, 10, StringComparison.CurrentCultureIgnoreCase)==0;
+                return Type.Length>10 && string.Compare(Type, 0, "multipart/", 0, 10, StringComparison.OrdinalIgnoreCase)==0;
             }
         }
         public              string              Boundary
@@ -115,14 +115,14 @@ namespace Jannesen.FileFormat.Mime
         {
             string  Extension = System.IO.Path.GetExtension(fileName);
 
-            if (string.Compare(Extension, ".eml", StringComparison.CurrentCultureIgnoreCase) == 0)   return new MimeContentType(MessageRFC822);
-            if (string.Compare(Extension, ".zip", StringComparison.CurrentCultureIgnoreCase) == 0)   return new MimeContentType(ApplicationZip);
-            if (string.Compare(Extension, ".edn", StringComparison.CurrentCultureIgnoreCase) == 0)   return new MimeContentType(ApplicationEdifact);
-            if (string.Compare(Extension, ".xls", StringComparison.CurrentCultureIgnoreCase) == 0)   return new MimeContentType(ApplicationMSExcel);
-            if (string.Compare(Extension, ".xml", StringComparison.CurrentCultureIgnoreCase) == 0)   return new MimeContentType(TextXml);
-            if (string.Compare(Extension, ".xsl", StringComparison.CurrentCultureIgnoreCase) == 0)   return new MimeContentType(TextXsl);
-            if (string.Compare(Extension, ".csv", StringComparison.CurrentCultureIgnoreCase) == 0)   return new MimeContentType(TextCsv);
-            if (string.Compare(Extension, ".txt", StringComparison.CurrentCultureIgnoreCase) == 0)   return new MimeContentType(TextPlain);
+            if (string.Compare(Extension, ".eml", StringComparison.OrdinalIgnoreCase) == 0)   return new MimeContentType(MessageRFC822);
+            if (string.Compare(Extension, ".zip", StringComparison.OrdinalIgnoreCase) == 0)   return new MimeContentType(ApplicationZip);
+            if (string.Compare(Extension, ".edn", StringComparison.OrdinalIgnoreCase) == 0)   return new MimeContentType(ApplicationEdifact);
+            if (string.Compare(Extension, ".xls", StringComparison.OrdinalIgnoreCase) == 0)   return new MimeContentType(ApplicationMSExcel);
+            if (string.Compare(Extension, ".xml", StringComparison.OrdinalIgnoreCase) == 0)   return new MimeContentType(TextXml);
+            if (string.Compare(Extension, ".xsl", StringComparison.OrdinalIgnoreCase) == 0)   return new MimeContentType(TextXsl);
+            if (string.Compare(Extension, ".csv", StringComparison.OrdinalIgnoreCase) == 0)   return new MimeContentType(TextCsv);
+            if (string.Compare(Extension, ".txt", StringComparison.OrdinalIgnoreCase) == 0)   return new MimeContentType(TextPlain);
 
             return new MimeContentType("application/x-extension-"+Extension.Substring(1));
         }

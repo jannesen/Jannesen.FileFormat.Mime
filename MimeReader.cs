@@ -57,7 +57,7 @@ namespace Jannesen.FileFormat.Mime
                 string  Value = _curLineToString(i+2, _curLength-(i+2));
 
                 if (xheader) {
-                    if (Name.StartsWith("x-", StringComparison.InvariantCulture))
+                    if (Name.StartsWith("x-", StringComparison.Ordinal))
                         _positionBeginMessage = _position;
                     else
                         xheader = false;

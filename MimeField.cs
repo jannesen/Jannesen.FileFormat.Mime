@@ -221,7 +221,7 @@ namespace Jannesen.FileFormat.Mime
         {
             get {
                 for (int i = 0 ; i < Count ; ++i) {
-                    if (string.Compare(base[i].Name, name, StringComparison.CurrentCultureIgnoreCase)==0)
+                    if (string.Compare(base[i].Name, name, StringComparison.OrdinalIgnoreCase)==0)
                         return base[i];
                 }
 
@@ -336,7 +336,7 @@ namespace Jannesen.FileFormat.Mime
             List<string>    rtn = new List<string>();
 
             for (int i = 0 ; i < Count ; ++i) {
-                if (string.Compare(base[i].Name, name, StringComparison.CurrentCultureIgnoreCase)==0)
+                if (string.Compare(base[i].Name, name, StringComparison.OrdinalIgnoreCase)==0)
                     rtn.Add(base[i].Value);
             }
 

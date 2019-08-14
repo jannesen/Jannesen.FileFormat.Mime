@@ -17,7 +17,7 @@ namespace Jannesen.FileFormat.Mime
         public              bool                    isAttachment
         {
             get {
-                return string.Compare(Type, Attachment, StringComparison.CurrentCultureIgnoreCase)==0;
+                return string.Compare(Type, Attachment, StringComparison.OrdinalIgnoreCase)==0;
             }
             set {
                 SetType(Attachment);

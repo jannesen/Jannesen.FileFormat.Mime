@@ -180,12 +180,12 @@ namespace Jannesen.FileFormat.Mime
             if (encodingText == null)
                 return MimeEncoding.Text;
 
-            if (string.Compare(encodingText, "7bit",                StringComparison.CurrentCultureIgnoreCase)==0)   return MimeEncoding.Text7bit;
-            if (string.Compare(encodingText, "8bit",                StringComparison.CurrentCultureIgnoreCase)==0)   return MimeEncoding.Text8bit;
-            if (string.Compare(encodingText, "binary",              StringComparison.CurrentCultureIgnoreCase)==0)   return MimeEncoding.Binary;
-            if (string.Compare(encodingText, "quoted-printable",    StringComparison.CurrentCultureIgnoreCase)==0)   return MimeEncoding.QuotedPrintable;
-            if (string.Compare(encodingText, "base64",              StringComparison.CurrentCultureIgnoreCase)==0)   return MimeEncoding.Base64;
-            if (string.Compare(encodingText, "uuencode",            StringComparison.CurrentCultureIgnoreCase)==0)   return MimeEncoding.UUEncode;
+            if (string.Compare(encodingText, "7bit",                StringComparison.OrdinalIgnoreCase)==0)   return MimeEncoding.Text7bit;
+            if (string.Compare(encodingText, "8bit",                StringComparison.OrdinalIgnoreCase)==0)   return MimeEncoding.Text8bit;
+            if (string.Compare(encodingText, "binary",              StringComparison.OrdinalIgnoreCase)==0)   return MimeEncoding.Binary;
+            if (string.Compare(encodingText, "quoted-printable",    StringComparison.OrdinalIgnoreCase)==0)   return MimeEncoding.QuotedPrintable;
+            if (string.Compare(encodingText, "base64",              StringComparison.OrdinalIgnoreCase)==0)   return MimeEncoding.Base64;
+            if (string.Compare(encodingText, "uuencode",            StringComparison.OrdinalIgnoreCase)==0)   return MimeEncoding.UUEncode;
 
             return MimeEncoding.Unknown;
         }
