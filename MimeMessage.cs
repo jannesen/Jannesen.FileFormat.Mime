@@ -204,30 +204,31 @@ namespace Jannesen.FileFormat.Mime
         private             void                _parseMessage(Stream stream)
         {
             MimeReader      reader     = new MimeReader(stream);
-            StringWriter    bodyWriter = new StringWriter();
 
-            SetFields(reader.ReadFields());
+            using (var bodyWriter = new StringWriter()) { 
+                SetFields(reader.ReadFields());
 
-            if (MimeVersion != null) {
-                string  StrContentType = Fields.Value("Content-Type");
-                if (StrContentType == null)
-                    throw new MimeException("Invalid mime-message, missing 'Content-Type'.");
+                if (MimeVersion != null) {
+                    string  StrContentType = Fields.Value("Content-Type");
+                    if (StrContentType == null)
+                        throw new MimeException("Invalid mime-message, missing 'Content-Type'.");
 
-                MimeContentType ContentType = MimeContentType.Parse(StrContentType, true);
+                    MimeContentType ContentType = MimeContentType.Parse(StrContentType, true);
 
-                if (ContentType.isMultipart) {
-                    ParseMultiPart(ContentType, reader, bodyWriter);
+                    if (ContentType.isMultipart) {
+                        ParseMultiPart(ContentType, reader, bodyWriter);
+                    }
+                    else {
+                        SetContent(reader.ReadData(ContentTransferEncoding, null));
+                    }
                 }
                 else {
-                    SetContent(reader.ReadData(ContentTransferEncoding, null));
+                    while (reader.ReadLine(false))
+                        reader.WriteLineTo(bodyWriter);
                 }
-            }
-            else {
-                while (reader.ReadLine(false))
-                    reader.WriteLineTo(bodyWriter);
-            }
 
-            _body = bodyWriter.ToString();
+                _body = bodyWriter.ToString();
+            }
 
             Fields.SetCollectionReadOnly();
         }
