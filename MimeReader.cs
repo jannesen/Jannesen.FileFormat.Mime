@@ -180,7 +180,7 @@ namespace Jannesen.FileFormat.Mime
 
         private             void            _decodeTextTo(MemoryStream content)
         {
-            if (content is null) throw new ArgumentNullException(nameof(content));
+            ArgumentNullException.ThrowIfNull(content);
 
             for (int i = 0 ; i < _curLength ; ++i)
                 content.WriteByte((byte)_curLine[i]);
@@ -190,7 +190,7 @@ namespace Jannesen.FileFormat.Mime
         }
         private             void            _decodeQuotedPrintableTo(MemoryStream content)
         {
-            if (content is null) throw new ArgumentNullException(nameof(content));
+            ArgumentNullException.ThrowIfNull(content);
 
             int     pos = 0;
 
@@ -214,7 +214,7 @@ namespace Jannesen.FileFormat.Mime
         }
         private             void            _decodeBase64To(MemoryStream content)
         {
-            if (content is null) throw new ArgumentNullException(nameof(content));
+            ArgumentNullException.ThrowIfNull(content);
 
             int     pos = 0;
 
@@ -261,7 +261,7 @@ namespace Jannesen.FileFormat.Mime
         }
         private             void            _decodeUUEncodeTo(MemoryStream content)
         {
-            if (content is null) throw new ArgumentNullException(nameof(content));
+            ArgumentNullException.ThrowIfNull(content);
 
             if (_curLength>0) {
                 int     pos = 1;

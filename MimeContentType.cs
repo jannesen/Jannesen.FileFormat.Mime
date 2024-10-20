@@ -115,16 +115,16 @@ namespace Jannesen.FileFormat.Mime
         {
             string  Extension = System.IO.Path.GetExtension(fileName);
 
-            if (string.Compare(Extension, ".eml", StringComparison.OrdinalIgnoreCase) == 0)   return new MimeContentType(MessageRFC822);
-            if (string.Compare(Extension, ".zip", StringComparison.OrdinalIgnoreCase) == 0)   return new MimeContentType(ApplicationZip);
-            if (string.Compare(Extension, ".edn", StringComparison.OrdinalIgnoreCase) == 0)   return new MimeContentType(ApplicationEdifact);
-            if (string.Compare(Extension, ".xls", StringComparison.OrdinalIgnoreCase) == 0)   return new MimeContentType(ApplicationMSExcel);
-            if (string.Compare(Extension, ".xml", StringComparison.OrdinalIgnoreCase) == 0)   return new MimeContentType(TextXml);
-            if (string.Compare(Extension, ".xsl", StringComparison.OrdinalIgnoreCase) == 0)   return new MimeContentType(TextXsl);
-            if (string.Compare(Extension, ".csv", StringComparison.OrdinalIgnoreCase) == 0)   return new MimeContentType(TextCsv);
-            if (string.Compare(Extension, ".txt", StringComparison.OrdinalIgnoreCase) == 0)   return new MimeContentType(TextPlain);
+            if (string.Equals(Extension, ".eml", StringComparison.OrdinalIgnoreCase))   return new MimeContentType(MessageRFC822);
+            if (string.Equals(Extension, ".zip", StringComparison.OrdinalIgnoreCase))   return new MimeContentType(ApplicationZip);
+            if (string.Equals(Extension, ".edn", StringComparison.OrdinalIgnoreCase))   return new MimeContentType(ApplicationEdifact);
+            if (string.Equals(Extension, ".xls", StringComparison.OrdinalIgnoreCase))   return new MimeContentType(ApplicationMSExcel);
+            if (string.Equals(Extension, ".xml", StringComparison.OrdinalIgnoreCase))   return new MimeContentType(TextXml);
+            if (string.Equals(Extension, ".xsl", StringComparison.OrdinalIgnoreCase))   return new MimeContentType(TextXsl);
+            if (string.Equals(Extension, ".csv", StringComparison.OrdinalIgnoreCase))   return new MimeContentType(TextCsv);
+            if (string.Equals(Extension, ".txt", StringComparison.OrdinalIgnoreCase))   return new MimeContentType(TextPlain);
 
-            return new MimeContentType("application/x-extension-"+Extension.Substring(1));
+            return new MimeContentType(string.Concat("application/x-extension-", Extension.AsSpan(1)));
         }
         public  static      string              ToFileExtension(string ContentType)
         {
@@ -148,7 +148,7 @@ namespace Jannesen.FileFormat.Mime
 
         public  static      MimeContentType     MapContentType(string fileName, MimeContentType contentType)
         {
-            if (contentType is null) throw new ArgumentNullException(nameof(contentType));
+            ArgumentNullException.ThrowIfNull(contentType);
 
             if (contentType.Type == ApplicationOctetStream && fileName != null)
                 return FromFileExtension(fileName);

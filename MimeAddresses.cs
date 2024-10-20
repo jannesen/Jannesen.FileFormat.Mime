@@ -115,9 +115,12 @@ namespace Jannesen.FileFormat.Mime
         }
         public              void                WriteTo(MimeWriter writer)
         {
+            ArgumentNullException.ThrowIfNull(writer);
+
             for (int i = 0 ; i < Count ; ++i) {
-                if (i > 0)
+                if (i > 0) {
                     writer.WriteAddressSep();
+                }
 
                 base[i].WriteTo(writer);
             }

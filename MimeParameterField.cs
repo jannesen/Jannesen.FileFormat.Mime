@@ -68,7 +68,7 @@ namespace Jannesen.FileFormat.Mime
         }
         public              void                WriteTo(MimeWriter writer)
         {
-            if (writer is null) throw new ArgumentNullException(nameof(writer));
+            ArgumentNullException.ThrowIfNull(writer);
 
             writer.WriteFieldValue(_type);
 
@@ -151,9 +151,7 @@ namespace Jannesen.FileFormat.Mime
 
                 if (readOnly) {
                     _readOnly = true;
-
-                    if (_parameters != null)
-                        _parameters.SetCollectionReadOnly();
+                    _parameters?.SetCollectionReadOnly();
                 }
             }
             catch(Exception Err) {

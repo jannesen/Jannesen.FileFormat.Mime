@@ -107,8 +107,8 @@ namespace Jannesen.FileFormat.Mime
         }
         public                                      MimePart(MimeFields fields, byte[] content)
         {
-            if (fields is null) throw new ArgumentNullException(nameof(fields));
-            if (content is null) throw new ArgumentNullException(nameof(content));
+            ArgumentNullException.ThrowIfNull(fields);
+            ArgumentNullException.ThrowIfNull(content);
 
             _fields        = fields;
             _content       = content;
@@ -121,7 +121,7 @@ namespace Jannesen.FileFormat.Mime
         }
         public              void                    SetTextContent(string text, System.Text.Encoding encoding)
         {
-            if (encoding is null) throw new ArgumentNullException(nameof(encoding));
+            ArgumentNullException.ThrowIfNull(encoding);
 
             ContentType = MimeContentType.NewTextPlain();
             ContentType.Charset = encoding.BodyName;
@@ -135,7 +135,7 @@ namespace Jannesen.FileFormat.Mime
         }
         public              void                    SetContentFromFile(Stream stream)
         {
-            if (stream is null) throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
             byte[]  buf = new byte[4096];
             int     rs;
@@ -149,7 +149,7 @@ namespace Jannesen.FileFormat.Mime
         }
         public              void                    SetContent(byte[] content)
         {
-            if (content is null) throw new ArgumentNullException(nameof(content));
+            ArgumentNullException.ThrowIfNull(content);
 
             SetContent(content, content.Length);
         }
@@ -180,12 +180,12 @@ namespace Jannesen.FileFormat.Mime
             if (encodingText == null)
                 return MimeEncoding.Text;
 
-            if (string.Compare(encodingText, "7bit",                StringComparison.OrdinalIgnoreCase)==0)   return MimeEncoding.Text7bit;
-            if (string.Compare(encodingText, "8bit",                StringComparison.OrdinalIgnoreCase)==0)   return MimeEncoding.Text8bit;
-            if (string.Compare(encodingText, "binary",              StringComparison.OrdinalIgnoreCase)==0)   return MimeEncoding.Binary;
-            if (string.Compare(encodingText, "quoted-printable",    StringComparison.OrdinalIgnoreCase)==0)   return MimeEncoding.QuotedPrintable;
-            if (string.Compare(encodingText, "base64",              StringComparison.OrdinalIgnoreCase)==0)   return MimeEncoding.Base64;
-            if (string.Compare(encodingText, "uuencode",            StringComparison.OrdinalIgnoreCase)==0)   return MimeEncoding.UUEncode;
+            if (string.Equals(encodingText, "7bit",                StringComparison.OrdinalIgnoreCase))   return MimeEncoding.Text7bit;
+            if (string.Equals(encodingText, "8bit",                StringComparison.OrdinalIgnoreCase))   return MimeEncoding.Text8bit;
+            if (string.Equals(encodingText, "binary",              StringComparison.OrdinalIgnoreCase))   return MimeEncoding.Binary;
+            if (string.Equals(encodingText, "quoted-printable",    StringComparison.OrdinalIgnoreCase))   return MimeEncoding.QuotedPrintable;
+            if (string.Equals(encodingText, "base64",              StringComparison.OrdinalIgnoreCase))   return MimeEncoding.Base64;
+            if (string.Equals(encodingText, "uuencode",            StringComparison.OrdinalIgnoreCase))   return MimeEncoding.UUEncode;
 
             return MimeEncoding.Unknown;
         }
@@ -215,7 +215,7 @@ namespace Jannesen.FileFormat.Mime
         }
         public              void                    WriteTo(MimeWriter writer)
         {
-            if (writer is null) throw new ArgumentNullException(nameof(writer));
+            ArgumentNullException.ThrowIfNull(writer);
 
             Fields.WriteTo(writer);
             writer.WriteNewLine();
@@ -227,7 +227,7 @@ namespace Jannesen.FileFormat.Mime
         }
         internal virtual    void                    WriteContentTo(MimeWriter writer)
         {
-            if (writer is null) throw new ArgumentNullException(nameof(writer));
+            ArgumentNullException.ThrowIfNull(writer);
 
             writer.WriteContent(_content, _contentLength, ContentTransferEncoding);
         }

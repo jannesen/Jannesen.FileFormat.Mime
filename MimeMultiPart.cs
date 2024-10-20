@@ -28,14 +28,12 @@ namespace Jannesen.FileFormat.Mime
 
         protected           void                ParseMultiPart(MimeContentType contentType, MimeReader reader, StringWriter bodyWriter)
         {
-            if (contentType is null) throw new ArgumentNullException(nameof(contentType));
-            if (reader is null)      throw new ArgumentNullException(nameof(reader));
+            ArgumentNullException.ThrowIfNull(contentType);
+            ArgumentNullException.ThrowIfNull(reader);
 
             _parts   = new MimeParts();
 
-            string Boundary = contentType.Boundary;
-            if (Boundary == null)
-                throw new MimeException("Invalid multipart-mime-message, missing 'Boundary'.");
+            string Boundary = contentType.Boundary ?? throw new MimeException("Invalid multipart-mime-message, missing 'Boundary'.");
 
             while (true) {
                 if (!reader.ReadLine(false))

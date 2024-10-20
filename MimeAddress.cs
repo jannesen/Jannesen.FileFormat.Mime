@@ -106,7 +106,7 @@ namespace Jannesen.FileFormat.Mime
 
                     curToken = MimeLexicalToken.Parse(mimeAddressString, ref position);
                     if (curToken.Type != MimeLexicalTokenType.Atom)
-                        throw new Exception("invalid address.");
+                        throw new MimeException("invalid address.");
 
                     addressesToken.AddAddress(curToken);
 
@@ -135,10 +135,7 @@ namespace Jannesen.FileFormat.Mime
 
             if (curToken.Type == MimeLexicalTokenType.AngleBracketOpen) {
                 if (addressesToken.Type != MimeLexicalTokenType.None)
-                    throw new Exception("dubble address");
-
-                if (curToken.Type == MimeLexicalTokenType.WhiteSpace)
-                    curToken = MimeLexicalToken.Parse(mimeAddressString, ref position);
+                    throw new MimeException("dubble address");
 
                 while ((curToken = MimeLexicalToken.Parse(mimeAddressString, ref position)).Type == MimeLexicalTokenType.Atom ||
                         curToken.Type == MimeLexicalTokenType.At)
@@ -148,7 +145,7 @@ namespace Jannesen.FileFormat.Mime
                     curToken = MimeLexicalToken.Parse(mimeAddressString, ref position);
 
                 if (curToken.Type != MimeLexicalTokenType.AngleBracketClose)
-                    throw new Exception("missing '>'.");
+                    throw new MimeException("missing '>'.");
 
                 curToken = MimeLexicalToken.Parse(mimeAddressString, ref position);
             }
@@ -167,7 +164,7 @@ namespace Jannesen.FileFormat.Mime
                 curToken = MimeLexicalToken.Parse(mimeAddressString, ref position);
 
             if (addressesToken.Type == MimeLexicalTokenType.None)
-                throw new Exception("missing address");
+                throw new MimeException("missing address");
 
             if (curToken.Type != MimeLexicalTokenType.EOL && curToken.Type != MimeLexicalTokenType.WhiteSpace)
                 position = curToken.Begin;
@@ -183,6 +180,7 @@ namespace Jannesen.FileFormat.Mime
         }
         public              void                WriteTo(MimeWriter writer)
         {
+            ArgumentNullException.ThrowIfNull(writer);
             writer.WriteAddress(_address, _displayName);
         }
 

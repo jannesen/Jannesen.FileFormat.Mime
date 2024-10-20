@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 
 namespace Jannesen.FileFormat.Mime
 {
@@ -37,7 +36,7 @@ namespace Jannesen.FileFormat.Mime
         public              MimeAddress             ValueAddress
         {
             get {
-                if (_valueObject == null || !(_valueObject is MimeAddress))
+                if (_valueObject == null || _valueObject is not MimeAddress)
                     _valueObject = MimeAddress.Parse(_value, _readOnly);
 
                 return (MimeAddress)_valueObject;
@@ -53,7 +52,7 @@ namespace Jannesen.FileFormat.Mime
         public              MimeAddresses           ValueAddresses
         {
             get {
-                if (_valueObject == null || !(_valueObject is MimeAddresses))
+                if (_valueObject == null || _valueObject is not MimeAddresses)
                     _valueObject = MimeAddresses.Parse(_value, _readOnly);
 
                 return (MimeAddresses)_valueObject;
@@ -69,7 +68,7 @@ namespace Jannesen.FileFormat.Mime
         public              MimeContentDisposition  ValueContentDisposition
         {
             get {
-                if (_valueObject == null || !(_valueObject is MimeContentDisposition))
+                if (_valueObject == null || _valueObject is not MimeContentDisposition)
                     _valueObject = MimeContentDisposition.Parse(_value, _readOnly);
 
                 return (MimeContentDisposition)_valueObject;
@@ -85,7 +84,7 @@ namespace Jannesen.FileFormat.Mime
         public              MimeContentType         ValueContentType
         {
             get {
-                if (_valueObject == null || !(_valueObject is MimeContentType))
+                if (_valueObject == null || _valueObject is not MimeContentType)
                     _valueObject = MimeContentType.Parse(_value, _readOnly);
 
                 return (MimeContentType)_valueObject;
@@ -121,7 +120,7 @@ namespace Jannesen.FileFormat.Mime
                     string[]    dateparts = str.Split(' ');
                     string[]    timeparts = dateparts[3].Split(':');
                     string      timezone  = dateparts[4];
-                    day   = int.Parse(dateparts[0], System.Globalization.NumberStyles.Integer, CultureInfo.InvariantCulture);
+                    day   = int.Parse(dateparts[0], NumberStyles.Integer, CultureInfo.InvariantCulture);
 
                     switch(dateparts[1].ToLowerInvariant()) {
                     case "jan":     month =  1;                         break;
@@ -136,20 +135,20 @@ namespace Jannesen.FileFormat.Mime
                     case "oct":     month = 10;                         break;
                     case "nov":     month = 11;                         break;
                     case "dec":     month = 12;                         break;
-                    default:        month = int.Parse(dateparts[1], System.Globalization.NumberStyles.Integer, CultureInfo.InvariantCulture);    break;
+                    default:        month = int.Parse(dateparts[1], NumberStyles.Integer, CultureInfo.InvariantCulture);    break;
                     }
 
-                    year  = int.Parse(dateparts[2], System.Globalization.NumberStyles.Integer, CultureInfo.InvariantCulture);
+                    year  = int.Parse(dateparts[2], NumberStyles.Integer, CultureInfo.InvariantCulture);
 
                     if (year<100) year = (year>70) ? 1900+year:2000+year;
 
-                    DateTime    dt = new DateTime(year, month, day, int.Parse(timeparts[0], System.Globalization.NumberStyles.Integer, CultureInfo.InvariantCulture), int.Parse(timeparts[1], System.Globalization.NumberStyles.Integer, CultureInfo.InvariantCulture), 0);
+                    DateTime    dt = new DateTime(year, month, day, int.Parse(timeparts[0], NumberStyles.Integer, CultureInfo.InvariantCulture), int.Parse(timeparts[1], NumberStyles.Integer, CultureInfo.InvariantCulture), 0);
 
                     if (timeparts.Length>2)
                         dt = dt.AddSeconds(double.Parse(timeparts[2], CultureInfo.InvariantCulture));
 
                     if ((timezone[0]=='-' || timezone[0]=='+') && timezone.Length==5)
-                        dt = dt.AddMinutes(-int.Parse(timezone.Substring(0, 3), System.Globalization.NumberStyles.Integer, CultureInfo.InvariantCulture)*60 + int.Parse(timezone.Substring(3, 2), System.Globalization.NumberStyles.Integer, CultureInfo.InvariantCulture));
+                        dt = dt.AddMinutes(-int.Parse(timezone.AsSpan(0, 3), NumberStyles.Integer, CultureInfo.InvariantCulture)*60 + int.Parse(timezone.AsSpan(3, 2), NumberStyles.Integer, CultureInfo.InvariantCulture));
                     else {
                         switch(timezone) {
                         case "(UTC)":                           break;
@@ -221,7 +220,7 @@ namespace Jannesen.FileFormat.Mime
         {
             get {
                 for (int i = 0 ; i < Count ; ++i) {
-                    if (string.Compare(base[i].Name, name, StringComparison.OrdinalIgnoreCase)==0)
+                    if (string.Equals(base[i].Name, name, StringComparison.OrdinalIgnoreCase))
                         return base[i];
                 }
 
@@ -336,7 +335,7 @@ namespace Jannesen.FileFormat.Mime
             List<string>    rtn = new List<string>();
 
             for (int i = 0 ; i < Count ; ++i) {
-                if (string.Compare(base[i].Name, name, StringComparison.OrdinalIgnoreCase)==0)
+                if (string.Equals(base[i].Name, name, StringComparison.OrdinalIgnoreCase))
                     rtn.Add(base[i].Value);
             }
 
