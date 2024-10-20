@@ -1,4 +1,4 @@
-﻿# Jannesen.FileFormat.Mime
+# Jannesen.FileFormat.Mime
 
 Mime reader/writer.
 
