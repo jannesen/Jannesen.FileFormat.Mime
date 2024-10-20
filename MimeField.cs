@@ -27,7 +27,7 @@ namespace Jannesen.FileFormat.Mime
             }
             set {
                 if (_readOnly)
-                    throw new MimeException("Not allowed to change Value.");
+                    throw new InvalidOperationException("Not allowed to change Value.");
 
                 _valueObject = null;
                 _value       = value;
@@ -43,7 +43,7 @@ namespace Jannesen.FileFormat.Mime
             }
             set {
                 if (_readOnly)
-                    throw new MimeException("Not allowed to change Value.");
+                    throw new InvalidOperationException("Not allowed to change Value.");
 
                 _value       = null;
                 _valueObject = value;
@@ -59,7 +59,7 @@ namespace Jannesen.FileFormat.Mime
             }
             set {
                 if (_readOnly)
-                    throw new MimeException("Not allowed to change Value.");
+                    throw new InvalidOperationException("Not allowed to change Value.");
 
                 _value       = null;
                 _valueObject = value;
@@ -75,7 +75,7 @@ namespace Jannesen.FileFormat.Mime
             }
             set {
                 if (_readOnly)
-                    throw new MimeException("Not allowed to change Value.");
+                    throw new InvalidOperationException("Not allowed to change Value.");
 
                 _value       = null;
                 _valueObject = value;
@@ -91,7 +91,7 @@ namespace Jannesen.FileFormat.Mime
             }
             set {
                 if (_readOnly)
-                    throw new MimeException("Not allowed to change Value.");
+                    throw new InvalidOperationException("Not allowed to change Value.");
 
                 _value       = null;
                 _valueObject = value;
@@ -242,56 +242,56 @@ namespace Jannesen.FileFormat.Mime
         public  new         void                    Add(MimeField field)
         {
             if (_readOnly)
-                throw new MimeException("Not allowed to add field.");
+                throw new InvalidOperationException("Not allowed to add field.");
 
             base.Add(field);
         }
         public  new         void                    AddRange(IEnumerable<MimeField> fields)
         {
             if (_readOnly)
-                throw new MimeException("Not allowed to add fields.");
+                throw new InvalidOperationException("Not allowed to add fields.");
 
             base.AddRange(fields);
         }
         public  new         void                    Clear()
         {
             if (_readOnly)
-                throw new MimeException("Not allowed to clear addresses.");
+                throw new InvalidOperationException("Not allowed to clear addresses.");
 
             base.Clear();
         }
         public  new         void                    Insert(int index, MimeField field)
         {
             if (_readOnly)
-                throw new MimeException("Not allowed to insert field.");
+                throw new InvalidOperationException("Not allowed to insert field.");
 
             base.Insert(index, field);
         }
         public  new         void                    InsertRange(int index, IEnumerable<MimeField> fields)
         {
             if (_readOnly)
-                throw new MimeException("Not allowed to insert fields.");
+                throw new InvalidOperationException("Not allowed to insert fields.");
 
             base.InsertRange(index, fields);
         }
         public  new         void                    Remove(MimeField field)
         {
             if (_readOnly)
-                throw new MimeException("Not allowed to remove field.");
+                throw new InvalidOperationException("Not allowed to remove field.");
 
             base.Remove(field);
         }
         public  new         void                    RemoveAll(Predicate<MimeField> match)
         {
             if (_readOnly)
-                throw new MimeException("Not allowed to remove field.");
+                throw new InvalidOperationException("Not allowed to remove field.");
 
             base.RemoveAll(match);
         }
         public  new         void                    RemoveAt(int Index)
         {
             if (_readOnly)
-                throw new MimeException("Not allowed to remove field.");
+                throw new InvalidOperationException("Not allowed to remove field.");
 
             base.RemoveAt(Index);
         }
@@ -310,7 +310,7 @@ namespace Jannesen.FileFormat.Mime
         public              MimeField               Set(string name)
         {
             if (_readOnly)
-                throw new MimeException("Not allowed to set field.");
+                throw new InvalidOperationException("Not allowed to set field.");
 
             MimeField fld = this[name];
 

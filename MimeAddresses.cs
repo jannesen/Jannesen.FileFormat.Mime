@@ -53,56 +53,56 @@ namespace Jannesen.FileFormat.Mime
         public  new         void                Add(MimeAddress address)
         {
             if (_readOnly)
-                throw new MimeException("Not allowed to add address.");
+                throw new InvalidOperationException("Not allowed to add address.");
 
             base.Add(address);
         }
         public  new         void                AddRange(IEnumerable<MimeAddress> addresses)
         {
             if (_readOnly)
-                throw new MimeException("Not allowed to add addresses.");
+                throw new InvalidOperationException("Not allowed to add addresses.");
 
             base.AddRange(addresses);
         }
         public  new         void                Clear()
         {
             if (_readOnly)
-                throw new MimeException("Not allowed to clear addresses.");
+                throw new InvalidOperationException("Not allowed to clear addresses.");
 
             base.Clear();
         }
         public  new         void                Insert(int index, MimeAddress address)
         {
             if (_readOnly)
-                throw new MimeException("Not allowed to insert address.");
+                throw new InvalidOperationException("Not allowed to insert address.");
 
             base.Insert(index, address);
         }
         public  new         void                InsertRange(int index, IEnumerable<MimeAddress> addresses)
         {
             if (_readOnly)
-                throw new MimeException("Not allowed to insert address.");
+                throw new InvalidOperationException("Not allowed to insert address.");
 
             base.InsertRange(index, addresses);
         }
         public  new         void                Remove(MimeAddress address)
         {
             if (_readOnly)
-                throw new MimeException("Not allowed to remove address.");
+                throw new InvalidOperationException("Not allowed to remove address.");
 
             base.Remove(address);
         }
         public  new         void                RemoveAll(Predicate<MimeAddress> match)
         {
             if (_readOnly)
-                throw new MimeException("Not allowed to remove addresses.");
+                throw new InvalidOperationException("Not allowed to remove addresses.");
 
             base.RemoveAll(match);
         }
         public  new         void                RemoveAt(int index)
         {
             if (_readOnly)
-                throw new MimeException("Not allowed to remove address.");
+                throw new InvalidOperationException("Not allowed to remove address.");
 
             base.RemoveAt(index);
         }

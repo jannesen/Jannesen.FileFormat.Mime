@@ -19,7 +19,7 @@ namespace Jannesen.FileFormat.Mime
             }
             set {
                 if (Fields.ReadOnly)
-                    throw new MimeException("not allowed to change body.");
+                    throw new InvalidOperationException("not allowed to change body.");
 
                 _body = value;
             }

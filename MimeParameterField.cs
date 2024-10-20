@@ -18,7 +18,7 @@ namespace Jannesen.FileFormat.Mime
             }
             set {
                 if (_readOnly)
-                    throw new MimeException("Not allowed to change type");
+                    throw new InvalidOperationException("Not allowed to change type");
 
                 _type = value;
             }

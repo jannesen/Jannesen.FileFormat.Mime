@@ -156,7 +156,7 @@ namespace Jannesen.FileFormat.Mime
         public              void                    SetContent(byte[] content, int length)
         {
             if (_fields.ReadOnly)
-                throw new MimeException("Not allowed to SetFields.");
+                throw new InvalidOperationException("Not allowed to SetFields.");
 
             _content       = content;
             _contentLength = length;
@@ -260,56 +260,56 @@ namespace Jannesen.FileFormat.Mime
         public  new         void                    Add(MimePart part)
         {
             if (_ReadOnly)
-                throw new MimeException("Not allowed to add part.");
+                throw new InvalidOperationException("Not allowed to add part.");
 
             base.Add(part);
         }
         public  new         void                    AddRange(IEnumerable<MimePart> parts)
         {
             if (_ReadOnly)
-                throw new MimeException("Not allowed to add parts.");
+                throw new InvalidOperationException("Not allowed to add parts.");
 
             base.AddRange(parts);
         }
         public  new         void                    Clear()
         {
             if (_ReadOnly)
-                throw new MimeException("Not allowed to clear addresses.");
+                throw new InvalidOperationException("Not allowed to clear addresses.");
 
             base.Clear();
         }
         public  new         void                    Insert(int index, MimePart part)
         {
             if (_ReadOnly)
-                throw new MimeException("Not allowed to insert part.");
+                throw new InvalidOperationException("Not allowed to insert part.");
 
             base.Insert(index, part);
         }
         public  new         void                    InsertRange(int index, IEnumerable<MimePart> parts)
         {
             if (_ReadOnly)
-                throw new MimeException("Not allowed to insert parts.");
+                throw new InvalidOperationException("Not allowed to insert parts.");
 
             base.InsertRange(index, parts);
         }
         public  new         void                    Remove(MimePart part)
         {
             if (_ReadOnly)
-                throw new MimeException("Not allowed to remove part.");
+                throw new InvalidOperationException("Not allowed to remove part.");
 
             base.Remove(part);
         }
         public  new         void                    RemoveAll(Predicate<MimePart> match)
         {
             if (_ReadOnly)
-                throw new MimeException("Not allowed to remove part.");
+                throw new InvalidOperationException("Not allowed to remove part.");
 
             base.RemoveAll(match);
         }
         public  new         void                    RemoveAt(int index)
         {
             if (_ReadOnly)
-                throw new MimeException("Not allowed to remove part.");
+                throw new InvalidOperationException("Not allowed to remove part.");
 
             base.RemoveAt(index);
         }

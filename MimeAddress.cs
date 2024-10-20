@@ -18,7 +18,7 @@ namespace Jannesen.FileFormat.Mime
             }
             set {
                 if (_readOnly)
-                    throw new MimeException("Not allowed to change Address.");
+                    throw new InvalidOperationException("Not allowed to change Address.");
 
                 _address = value;
             }
@@ -30,7 +30,7 @@ namespace Jannesen.FileFormat.Mime
             }
             set {
                 if (_readOnly)
-                    throw new MimeException("Not allowed to change DisplayName.");
+                    throw new InvalidOperationException("Not allowed to change DisplayName.");
 
                 _displayName = value;
             }
