@@ -20,10 +20,11 @@ namespace Jannesen.FileFormat.Mime
         {
             get {
                 try {
-                    MimeContentType ct = ContentType;
+                    var ct = ContentType;
 
-                    if (ct != null)
+                    if (ct != null) {
                         return ct.Name;
+                    }
                 }
                 catch(Exception) {
                 }
@@ -44,7 +45,7 @@ namespace Jannesen.FileFormat.Mime
         public              MimeEncoding            ContentTransferEncoding
         {
             get {
-                MimeField   fld = Fields["Content-Transfer-Encoding"];
+                var fld = Fields["Content-Transfer-Encoding"];
 
                 return (fld != null) ? StringToMimeEncoding(fld.Value) : MimeEncoding.Text;
             }
@@ -137,10 +138,10 @@ namespace Jannesen.FileFormat.Mime
         {
             ArgumentNullException.ThrowIfNull(stream);
 
-            byte[]  buf = new byte[4096];
-            int     rs;
+            var buf = new byte[4096];
+            int rs;
 
-            using (MemoryStream content = new MemoryStream()) {
+            using (var content = new MemoryStream()) {
                 while ((rs = stream.Read(buf, 0, buf.Length)) > 0)
                     content.Write(buf, 0, rs);
 
@@ -164,11 +165,11 @@ namespace Jannesen.FileFormat.Mime
 
         public  static      MimePart                NewAttachment(string name, MimeContentType contentType, byte[] data, int length)
         {
-            MimePart    part = new MimePart() {
-                                   ContentType             = contentType,
-                                   ContentDisposition      = MimeContentDisposition.NewAttachment(name),
-                                   ContentTransferEncoding = MimeEncoding.Base64
-                               };
+            var part = new MimePart() {
+                           ContentType             = contentType,
+                           ContentDisposition      = MimeContentDisposition.NewAttachment(name),
+                           ContentTransferEncoding = MimeEncoding.Base64
+                       };
             part.ContentType.Name = name;
             part.SetContent(data, length);
 

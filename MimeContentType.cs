@@ -70,7 +70,7 @@ namespace Jannesen.FileFormat.Mime
         public              Encoding            Encoding
         {
             get {
-                string  charset = this.Charset;
+                var charset = this.Charset;
 
                 if (charset==null)
                     return Encoding.ASCII;
@@ -104,7 +104,7 @@ namespace Jannesen.FileFormat.Mime
         }
         internal static new MimeContentType     Parse(string mimeValue, bool readOnly)
         {
-            MimeContentType     rtn = new MimeContentType();
+            var rtn = new MimeContentType();
 
             rtn.MimeParse(mimeValue, readOnly);
 
@@ -113,7 +113,7 @@ namespace Jannesen.FileFormat.Mime
 
         public  static      MimeContentType     FromFileExtension(string fileName)
         {
-            string  Extension = System.IO.Path.GetExtension(fileName);
+            var Extension = System.IO.Path.GetExtension(fileName);
 
             if (string.Equals(Extension, ".eml", StringComparison.OrdinalIgnoreCase))   return new MimeContentType(MessageRFC822);
             if (string.Equals(Extension, ".zip", StringComparison.OrdinalIgnoreCase))   return new MimeContentType(ApplicationZip);

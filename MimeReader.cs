@@ -42,19 +42,19 @@ namespace Jannesen.FileFormat.Mime
 
         public              MimeFields      ReadFields()
         {
-            bool            xheader = true;
-            MimeFields      fields  = new MimeFields();
+            var xheader = true;
+            var fields  = new MimeFields();
 
             while (ReadLine(true) && _curLength>0) {
-                int i = _curLineIndexOf(':');
+                var i = _curLineIndexOf(':');
                 if (i<0)
                     throw new MimeReaderException("Syntax error in field ':' not found).");
 
                 if (i<_curLength-1 && _curLine[i+1] != ' ')
                     throw new MimeReaderException("Syntax error in field ': ' not found).");
 
-                string  Name  = _curLineToString(0, i);
-                string  Value = _curLineToString(i+2, _curLength-(i+2));
+                var Name  = _curLineToString(0, i);
+                var Value = _curLineToString(i+2, _curLength-(i+2));
 
                 if (xheader) {
                     if (Name.StartsWith("x-", StringComparison.Ordinal))
@@ -70,7 +70,7 @@ namespace Jannesen.FileFormat.Mime
         }
         public              byte[]          ReadData(MimeEncoding encoding, string boundary)
         {
-            using(MemoryStream dataStream = new MemoryStream()) {
+            using(var dataStream = new MemoryStream()) {
                 while (true) {
                     if (!ReadLine(false))
                         return dataStream.ToArray();
@@ -98,8 +98,8 @@ namespace Jannesen.FileFormat.Mime
 
         public              bool            ReadLine(bool unfolding)
         {
-            int     pos = 0;
-            int     c;
+            var pos = 0;
+            int c;
 
             if (_unChar != -1) {
                 c = _unChar;
@@ -158,17 +158,21 @@ namespace Jannesen.FileFormat.Mime
             if (_curLine[0] != '-' || _curLine[1] != '-')
                 return 0;
 
-            for (int i=0 ; i<boundary.Length ; ++i)
-                if (_curLine[2+i] != boundary[i])
+            for (var i=0 ; i<boundary.Length ; ++i) {
+                if (_curLine[2+i] != boundary[i]) {
                     return 0;
+                }
+            }
 
-            if (_curLength == 2+boundary.Length)
+            if (_curLength == 2+boundary.Length) {
                 return 1;
+            }
 
 
             if (_curLength == 2+boundary.Length+2) {
-                if (_curLine[2+boundary.Length]=='-' || _curLine[2+boundary.Length+1]=='-')
+                if (_curLine[2+boundary.Length]=='-' || _curLine[2+boundary.Length+1]=='-') {
                     return -1;
+                }
             }
 
             return 0;
@@ -182,7 +186,7 @@ namespace Jannesen.FileFormat.Mime
         {
             ArgumentNullException.ThrowIfNull(content);
 
-            for (int i = 0 ; i < _curLength ; ++i)
+            for (var i = 0 ; i < _curLength ; ++i)
                 content.WriteByte((byte)_curLine[i]);
 
             content.WriteByte((byte)'\r');
@@ -192,16 +196,16 @@ namespace Jannesen.FileFormat.Mime
         {
             ArgumentNullException.ThrowIfNull(content);
 
-            int     pos = 0;
+            var pos = 0;
 
             while (pos<_curLength) {
-                int     c = _curLine[pos++];
+                var c = _curLine[pos++];
 
                 if (c == '=') {
                     if (pos+2>_curLength)
                         return ;
 
-                    c = (_hexCharToNibble(_curLine[pos]) << 4) | _hexCharToNibble(_curLine[pos + 1]);
+                    c = (char)((_hexCharToNibble(_curLine[pos]) << 4) | _hexCharToNibble(_curLine[pos + 1]));
 
                     pos += 2;
                 }
@@ -216,11 +220,11 @@ namespace Jannesen.FileFormat.Mime
         {
             ArgumentNullException.ThrowIfNull(content);
 
-            int     pos = 0;
+            var pos = 0;
 
             while (pos<_curLength) {
-                int i = 0;
-                int n = 3;
+                var i = 0;
+                var n = 3;
 
                 while (i<4 && pos<_curLength) {
                     int     c = _curLine[pos++];
@@ -264,16 +268,16 @@ namespace Jannesen.FileFormat.Mime
             ArgumentNullException.ThrowIfNull(content);
 
             if (_curLength>0) {
-                int     pos = 1;
-                int     n   = (_curLine[0] - 32);
+                var pos = 1;
+                var n   = (_curLine[0] - 32);
 
                 if (n<0 || n>64)
                     throw new MimeReaderException("Bad UUEncoded data.");
 
-                for (int b = 0 ; b < n ; b+=3) {
-                    for (int i = 0 ; i < 4 ; ++i) {
+                for (var b = 0 ; b < n ; b+=3) {
+                    for (var i = 0 ; i < 4 ; ++i) {
                         if (pos<_curLength) {
-                            int     c = _curLine[pos++];
+                            var     c = _curLine[pos++];
 
                             if (c < 32 || c >= 32+64)
                                 throw new MimeReaderException("Bad UUEncoded data.");
@@ -295,7 +299,7 @@ namespace Jannesen.FileFormat.Mime
 
         private             int             _curLineIndexOf(char chr)
         {
-            for (int i=0 ; i<_curLength ; ++i) {
+            for (var i=0 ; i<_curLength ; ++i) {
                 if (_curLine[i] == chr)
                     return i;
             }

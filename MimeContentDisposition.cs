@@ -47,7 +47,7 @@ namespace Jannesen.FileFormat.Mime
         }
         public  static new  MimeContentDisposition  Parse(string mimeValue, bool readOnly)
         {
-            MimeContentDisposition      rtn = new MimeContentDisposition();
+            var rtn = new MimeContentDisposition();
 
             rtn.MimeParse(mimeValue, readOnly);
 

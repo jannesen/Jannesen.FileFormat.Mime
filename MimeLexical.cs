@@ -30,8 +30,8 @@ namespace Jannesen.FileFormat.Mime
 
         public  static  MimeLexicalToken        Parse(string str, ref int Position)
         {
-            int                 Length = str.Length;
-            MimeLexicalToken    rtn = new MimeLexicalToken();
+            var Length = str.Length;
+            var rtn = new MimeLexicalToken();
 
             rtn.Begin =
             rtn.End   = Position;
@@ -222,7 +222,7 @@ namespace Jannesen.FileFormat.Mime
                 rtn = str.Substring(Begin, (End-Begin));
 
             {
-                int p = 0;
+                var p = 0;
 
                 while ((p = rtn.IndexOf('\\', p)) >= 0) {
                     rtn = rtn.Remove(p, 1);

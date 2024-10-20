@@ -69,9 +69,8 @@ namespace Jannesen.FileFormat.Mime
         public              MimeAddress         Sender
         {
             get {
-                MimeField   fld = Fields.Get("Sender")
-                                    ?? Fields["From"];
-
+                var fld = Fields.Get("Sender")
+                          ?? Fields["From"];
                 return fld?.ValueAddress;
             }
             set {
@@ -81,10 +80,9 @@ namespace Jannesen.FileFormat.Mime
         public              MimeAddress         ReplyAddress
         {
             get {
-                MimeField   fld = Fields.Get("Reply-To")
-                                    ?? Fields["Sender"]
-                                    ?? Fields["From"];
-
+                var fld = Fields.Get("Reply-To")
+                          ?? Fields["Sender"]
+                          ?? Fields["From"];
                 return fld?.ValueAddress;
             }
             set {
@@ -94,10 +92,11 @@ namespace Jannesen.FileFormat.Mime
         public              string              MessageID
         {
             get {
-                string      ID = Fields.Value("Message-ID");
+                var ID = Fields.Value("Message-ID");
 
-                if (ID != null && ID.StartsWith('<') && ID.EndsWith('>'))
+                if (ID != null && ID.StartsWith('<') && ID.EndsWith('>')) {
                     ID = ID.Substring(1, ID.Length - 2);
+                }
 
                 return ID;
             }
@@ -108,12 +107,7 @@ namespace Jannesen.FileFormat.Mime
         public              string              Subject
         {
             get {
-                MimeField   fld = Fields["Subject"];
-
-                if (fld != null)
-                    return fld.Value;
-
-                return null;
+                return Fields["Subject"]?.Value;
             }
             set {
                 Fields.Set("Subject").Value = value;
@@ -122,8 +116,7 @@ namespace Jannesen.FileFormat.Mime
         public              DateTime            Date
         {
             get {
-                MimeField   fld = Fields["Date"];
-
+                var fld = Fields["Date"];
                 return (fld != null) ? fld.ValueDateTime : DateTime.MinValue;
             }
             set {
@@ -175,7 +168,7 @@ namespace Jannesen.FileFormat.Mime
         }
         public              void                WriteTo(Stream stream)
         {
-            using(MimeWriter Writer = new MimeWriter(stream)) {
+            using(var Writer = new MimeWriter(stream)) {
                 if (WriteHasData) {
                     WriteTo(Writer);
                 }
@@ -189,8 +182,8 @@ namespace Jannesen.FileFormat.Mime
 #pragma warning disable CA1838 // CA1838: Avoid 'StringBuilder' parameters for P/Invokes
         public  static      string              GetFullComputerName()
         {
-            Int32           bufferSize = 0x100;
-            StringBuilder   nameBuffer = new StringBuilder(bufferSize);
+            var bufferSize = 0x100;
+            var nameBuffer = new StringBuilder(bufferSize);
 
             if (GetComputerNameEx(3, nameBuffer, ref bufferSize) == 0)
                 throw new InvalidOperationException("Can't get full computername");
@@ -200,15 +193,14 @@ namespace Jannesen.FileFormat.Mime
 
         private             void                _parseMessage(Stream stream)
         {
-            MimeReader      reader     = new MimeReader(stream);
+            var reader     = new MimeReader(stream);
 
             using (var bodyWriter = new StringWriter()) {
                 SetFields(reader.ReadFields());
 
                 if (MimeVersion != null) {
-                    string  StrContentType = Fields.Value("Content-Type") ?? throw new MimeException("Invalid mime-message, missing 'Content-Type'.");
-
-                    MimeContentType ContentType = MimeContentType.Parse(StrContentType, true);
+                    var StrContentType = Fields.Value("Content-Type") ?? throw new MimeException("Invalid mime-message, missing 'Content-Type'.");
+                    var ContentType    = MimeContentType.Parse(StrContentType, true);
 
                     if (ContentType.isMultipart) {
                         ParseMultiPart(ContentType, reader, bodyWriter);

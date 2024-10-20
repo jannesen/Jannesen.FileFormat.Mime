@@ -33,7 +33,7 @@ namespace Jannesen.FileFormat.Mime
 
             _parts   = new MimeParts();
 
-            string Boundary = contentType.Boundary ?? throw new MimeException("Invalid multipart-mime-message, missing 'Boundary'.");
+            var Boundary = contentType.Boundary ?? throw new MimeException("Invalid multipart-mime-message, missing 'Boundary'.");
 
             while (true) {
                 if (!reader.ReadLine(false))
@@ -48,11 +48,11 @@ namespace Jannesen.FileFormat.Mime
 
             while (reader.TestBoundary(Boundary) != -1) {
                 if (reader.TestBoundary(Boundary) == 1) {
-                    MimeFields      PartFields                 = reader.ReadFields();
-                    MimeField       FldContentTransferEncoding = PartFields["Content-Transfer-Encoding"];
-                    byte[]          PartContent                = reader.ReadData(MimePart.StringToMimeEncoding(FldContentTransferEncoding?.Value), Boundary);
-                    MimeField       FldPartContentType         = PartFields["Content-Type"];
-                    MimeContentType PartContentType            = FldPartContentType?.ValueContentType;
+                    var PartFields                 = reader.ReadFields();
+                    var FldContentTransferEncoding = PartFields["Content-Transfer-Encoding"];
+                    var PartContent                = reader.ReadData(MimePart.StringToMimeEncoding(FldContentTransferEncoding?.Value), Boundary);
+                    var FldPartContentType         = PartFields["Content-Type"];
+                    var PartContentType            = FldPartContentType?.ValueContentType;
 
                     if (PartContentType != null && PartContentType.isMultipart)
                         _parts.Add(new MimeMultiPart(PartContentType, PartFields, PartContent));
@@ -82,10 +82,10 @@ namespace Jannesen.FileFormat.Mime
         }
         internal override   void                WriteContentTo(MimeWriter writer)
         {
-            MimeField   FldContentType = Fields["Content-Type"];
+            var FldContentType = Fields["Content-Type"];
 
             if (FldContentType != null && FldContentType.ValueContentType.isMultipart) {
-                for (int i = 0 ; i < _parts.Count ; ++i) {
+                for (var i = 0 ; i < _parts.Count ; ++i) {
                     writer.WriteBoundary(ContentType.Boundary, false);
                     _parts[i].WriteTo(writer);
                 }

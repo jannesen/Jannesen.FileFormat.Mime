@@ -70,9 +70,8 @@ namespace Jannesen.FileFormat.Mime
             }
 
             try {
-                int Position = 0;
-
-                MimeAddress rtn = Parse(mimeAddressString, ref Position, readOnly);
+                var Position = 0;
+                var rtn = Parse(mimeAddressString, ref Position, readOnly);
 
                 if (Position < mimeAddressString.Length)
                     throw new MimeException("data after address.");
@@ -85,18 +84,16 @@ namespace Jannesen.FileFormat.Mime
         }
         internal static     MimeAddress         Parse(string mimeAddressString, ref int position, bool readOnly)
         {
-            MimeLexicalToken    addressesToken      = new MimeLexicalToken();
-            MimeLexicalToken    displayNameToken    = new MimeLexicalToken();
-            MimeLexicalToken    tempToken;
-            MimeLexicalToken    curToken;
+            var addressesToken      = new MimeLexicalToken();
+            var displayNameToken    = new MimeLexicalToken();
 
-            curToken = MimeLexicalToken.Parse(mimeAddressString, ref position);
+            var curToken = MimeLexicalToken.Parse(mimeAddressString, ref position);
 
             if (curToken.Type == MimeLexicalTokenType.WhiteSpace)
                 curToken = MimeLexicalToken.Parse(mimeAddressString, ref position);
 
             if (curToken.Type == MimeLexicalTokenType.Atom) {
-                tempToken = curToken;
+                var tempToken = curToken;
 
                 curToken = MimeLexicalToken.Parse(mimeAddressString, ref position);
 
@@ -186,7 +183,7 @@ namespace Jannesen.FileFormat.Mime
 
         public  override    string              ToString()
         {
-            string  rtn = "";
+            var rtn = "";
 
             if (_displayName != null)
                 rtn += "\"" + _displayName.Replace("\"", "\\\"") + "\" ";

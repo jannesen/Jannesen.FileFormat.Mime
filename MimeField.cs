@@ -101,13 +101,8 @@ namespace Jannesen.FileFormat.Mime
         {
             get {
                 try {
-                    string  str = Value;
-                    int     i;
-                    int     day;
-                    int     month;
-                    int     year;
-
-                    i = str.IndexOf(',');
+                    var str = Value;
+                    var i = str.IndexOf(',');
 
                 // Remove weekday
                     if (i>0) {
@@ -117,32 +112,32 @@ namespace Jannesen.FileFormat.Mime
                         str = str.Substring(i+1).TrimStart();
                     }
 
-                    string[]    dateparts = str.Split(' ');
-                    string[]    timeparts = dateparts[3].Split(':');
-                    string      timezone  = dateparts[4];
-                    day   = int.Parse(dateparts[0], NumberStyles.Integer, CultureInfo.InvariantCulture);
+                    var dateparts = str.Split(' ');
+                    var timeparts = dateparts[3].Split(':');
+                    var timezone  = dateparts[4];
+                    var day   = int.Parse(dateparts[0], NumberStyles.Integer, CultureInfo.InvariantCulture);
 
-                    switch(dateparts[1].ToLowerInvariant()) {
-                    case "jan":     month =  1;                         break;
-                    case "feb":     month =  2;                         break;
-                    case "mar":     month =  3;                         break;
-                    case "apr":     month =  4;                         break;
-                    case "may":     month =  5;                         break;
-                    case "jun":     month =  6;                         break;
-                    case "jul":     month =  7;                         break;
-                    case "aug":     month =  8;                         break;
-                    case "sep":     month =  9;                         break;
-                    case "oct":     month = 10;                         break;
-                    case "nov":     month = 11;                         break;
-                    case "dec":     month = 12;                         break;
-                    default:        month = int.Parse(dateparts[1], NumberStyles.Integer, CultureInfo.InvariantCulture);    break;
-                    }
+                    var month = dateparts[1].ToLowerInvariant() switch {
+                                "jan" =>  1,
+                                "feb" =>  2,
+                                "mar" =>  3,
+                                "apr" =>  4,
+                                "may" =>  5,
+                                "jun" =>  6,
+                                "jul" =>  7,
+                                "aug" =>  8,
+                                "sep" =>  9,
+                                "oct" => 10,
+                                "nov" => 11,
+                                "dec" => 12,
+                                _     => int.Parse(dateparts[1], NumberStyles.Integer, CultureInfo.InvariantCulture)
+                                };
 
-                    year  = int.Parse(dateparts[2], NumberStyles.Integer, CultureInfo.InvariantCulture);
+                    var year  = int.Parse(dateparts[2], NumberStyles.Integer, CultureInfo.InvariantCulture);
 
                     if (year<100) year = (year>70) ? 1900+year:2000+year;
 
-                    DateTime    dt = new DateTime(year, month, day, int.Parse(timeparts[0], NumberStyles.Integer, CultureInfo.InvariantCulture), int.Parse(timeparts[1], NumberStyles.Integer, CultureInfo.InvariantCulture), 0);
+                    var dt = new DateTime(year, month, day, int.Parse(timeparts[0], NumberStyles.Integer, CultureInfo.InvariantCulture), int.Parse(timeparts[1], NumberStyles.Integer, CultureInfo.InvariantCulture), 0);
 
                     if (timeparts.Length>2)
                         dt = dt.AddSeconds(double.Parse(timeparts[2], CultureInfo.InvariantCulture));
@@ -219,7 +214,7 @@ namespace Jannesen.FileFormat.Mime
         public              MimeField               this[string name]
         {
             get {
-                for (int i = 0 ; i < Count ; ++i) {
+                for (var i = 0 ; i < Count ; ++i) {
                     if (string.Equals(base[i].Name, name, StringComparison.OrdinalIgnoreCase))
                         return base[i];
                 }
@@ -298,7 +293,7 @@ namespace Jannesen.FileFormat.Mime
 
         public              MimeField               Get(string name)
         {
-            MimeField fld = this[name];
+            var fld = this[name];
 
             if (fld==null && !_readOnly) {
                 fld = new MimeField(name, null);
@@ -312,7 +307,7 @@ namespace Jannesen.FileFormat.Mime
             if (_readOnly)
                 throw new InvalidOperationException("Not allowed to set field.");
 
-            MimeField fld = this[name];
+            var fld = this[name];
 
             if (fld==null) {
                 fld = new MimeField(name, null);
@@ -323,7 +318,7 @@ namespace Jannesen.FileFormat.Mime
         }
         public              string                  Value(string name)
         {
-            MimeField fld = this[name];
+            var fld = this[name];
 
             if (fld!=null)
                 return fld.Value;
@@ -332,11 +327,12 @@ namespace Jannesen.FileFormat.Mime
         }
         public              string[]                Values(string name)
         {
-            List<string>    rtn = new List<string>();
+            var rtn = new List<string>();
 
-            for (int i = 0 ; i < Count ; ++i) {
-                if (string.Equals(base[i].Name, name, StringComparison.OrdinalIgnoreCase))
+            for (var i = 0 ; i < Count ; ++i) {
+                if (string.Equals(base[i].Name, name, StringComparison.OrdinalIgnoreCase)) {
                     rtn.Add(base[i].Value);
+                }
             }
 
             return rtn.ToArray();
@@ -349,8 +345,9 @@ namespace Jannesen.FileFormat.Mime
 
         internal            void                    WriteTo(MimeWriter writer)
         {
-            for (int i = 0 ; i < Count ; ++i)
+            for (var i = 0 ; i < Count ; ++i) {
                 base[i].WriteTo(writer);
+            }
         }
     }
 }

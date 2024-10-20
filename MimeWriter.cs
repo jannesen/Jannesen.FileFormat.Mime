@@ -65,8 +65,8 @@ namespace Jannesen.FileFormat.Mime
         }
         internal            void                WriteFieldParameter(MimeField parameter)
         {
-            string  Name  = parameter.Name;
-            string  Value = parameter.Value.Replace("\"", "\"\"");
+            var Name  = parameter.Name;
+            var Value = parameter.Value.Replace("\"", "\"\"");
 
             _write(';');
 
@@ -110,7 +110,7 @@ namespace Jannesen.FileFormat.Mime
         }
         internal            void                WriteBody(string body)
         {
-            byte[]  b = System.Text.Encoding.ASCII.GetBytes(body);
+            var b = System.Text.Encoding.ASCII.GetBytes(body);
 
             _writeContent_Text(b, b.Length);
         }
@@ -162,8 +162,8 @@ namespace Jannesen.FileFormat.Mime
 
         private             void                _writeContent_Text(byte[] content, int contentLength)
         {
-            for (int i = 0 ; i < contentLength ; ++i) {
-                byte b = content[i];
+            for (var i = 0 ; i < contentLength ; ++i) {
+                var b = content[i];
 
                 switch(b) {
                 case (byte)'\n':
@@ -190,8 +190,8 @@ namespace Jannesen.FileFormat.Mime
         }
         private             void                _writeContent_QuotedPrintable(byte[] content, int contentLength)
         {
-            for (int i = 0 ; i < contentLength ; ++i) {
-                byte    c = content[i];
+            for (var i = 0 ; i < contentLength ; ++i) {
+                var c = content[i];
 
                 switch(c) {
                 case (byte)' ':
@@ -256,8 +256,8 @@ encode:             {
         }
         private             void                _writeContent_Base64(byte[] content, int contentLength)
         {
-            int     pos = 0;
-            int     w = 0;
+            var pos = 0;
+            var w = 0;
 
             while (pos < contentLength) {
                 _write(_lookupTableBase64[((content[pos    ] >> 2) & 0x3F)]);
@@ -293,10 +293,9 @@ encode:             {
         }
         private static      Encoding            _findCharset(string str)
         {
-            for (int i = 0 ; i < str.Length ; ++i) {
+            for (var i = 0 ; i < str.Length ; ++i) {
                 if (str[i] >= 0x7F) {
-                    Encoding    encoding = Encoding.GetEncoding("utf-8");
-                    return encoding;
+                    return Encoding.GetEncoding("utf-8");
                 }
             }
 
@@ -304,14 +303,14 @@ encode:             {
         }
         private             void                _writeEncoded(Encoding encoding, string value)
         {
-            byte[]  data = encoding.GetBytes(value);
+            var data = encoding.GetBytes(value);
 
             _write("=?");
             _write(encoding.WebName);
             _write("?Q?");
 
-            for(int i = 0 ; i < data.Length ; ++i) {
-                char    c = (char)data[i];
+            for(var i = 0 ; i < data.Length ; ++i) {
+                var c = (char)data[i];
 
                 if (c == ' ') {
                     _write('_');

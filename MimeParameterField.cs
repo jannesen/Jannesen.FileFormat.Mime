@@ -53,10 +53,8 @@ namespace Jannesen.FileFormat.Mime
         }
         internal static     MimeParameterField  Parse(string mimeValue, bool readOnly)
         {
-            MimeParameterField      rtn = new MimeParameterField();
-
+            var rtn = new MimeParameterField();
             rtn.MimeParse(mimeValue, readOnly);
-
             return rtn;
         }
 
@@ -73,20 +71,21 @@ namespace Jannesen.FileFormat.Mime
             writer.WriteFieldValue(_type);
 
             if (_parameters != null) {
-                for(int i = 0 ; i < Parameters.Count ; ++i)
+                for(var i = 0 ; i < Parameters.Count ; ++i) {
                     writer.WriteFieldParameter(Parameters[i]);
+                }
             }
         }
 
         public  override    string              ToString()
         {
-            StringBuilder   rtn = new StringBuilder();
+            var rtn = new StringBuilder();
 
             rtn.Append(_type);
 
             if (_parameters != null) {
-                for(int i = 0 ; i < Parameters.Count ; ++i) {
-                    MimeField   Parameter = Parameters[i];
+                for(var i = 0 ; i < Parameters.Count ; ++i) {
+                    var Parameter = Parameters[i];
 
                     rtn.Append("; ");
                     rtn.Append(Parameter.Name);
@@ -106,7 +105,7 @@ namespace Jannesen.FileFormat.Mime
         }
         protected           void                MimeParse(string mimeValue, bool readOnly)
         {
-            int         Position = 0;
+            var Position = 0;
 
             if (mimeValue is null) {
                 if (readOnly)

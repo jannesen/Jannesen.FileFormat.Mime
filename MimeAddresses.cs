@@ -28,8 +28,8 @@ namespace Jannesen.FileFormat.Mime
             }
 
             try {
-                MimeAddresses   rtn      = new MimeAddresses();
-                int             position = 0;
+                var rtn      = new MimeAddresses();
+                var position = 0;
 
                 for (;;) {
                     rtn.Add(MimeAddress.Parse(mimeAddressesString, ref position, readOnly));
@@ -117,7 +117,7 @@ namespace Jannesen.FileFormat.Mime
         {
             ArgumentNullException.ThrowIfNull(writer);
 
-            for (int i = 0 ; i < Count ; ++i) {
+            for (var i = 0 ; i < Count ; ++i) {
                 if (i > 0) {
                     writer.WriteAddressSep();
                 }
@@ -128,9 +128,9 @@ namespace Jannesen.FileFormat.Mime
 
         public  override    string              ToString()
         {
-            string  rtn = "";
+            var rtn = "";
 
-            for (int i = 0 ; i < Count ; ++i) {
+            for (var i = 0 ; i < Count ; ++i) {
                 if (i>0)
                     rtn += ", ";
 
