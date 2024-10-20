@@ -205,7 +205,7 @@ namespace Jannesen.FileFormat.Mime
         {
             MimeReader      reader     = new MimeReader(stream);
 
-            using (var bodyWriter = new StringWriter()) { 
+            using (var bodyWriter = new StringWriter()) {
                 SetFields(reader.ReadFields());
 
                 if (MimeVersion != null) {
