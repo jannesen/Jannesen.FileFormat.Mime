@@ -14,11 +14,11 @@ namespace Jannesen.FileFormat.Mime
             _readOnly = false;
         }
 
-        internal static     MimeAddresses       Parse(string mimeAddressesString)
+        internal static     MimeAddresses       Parse(string? mimeAddressesString)
         {
             return Parse(mimeAddressesString, false);
         }
-        internal static     MimeAddresses       Parse(string mimeAddressesString, bool readOnly)
+        internal static     MimeAddresses       Parse(string? mimeAddressesString, bool readOnly)
         {
             if (mimeAddressesString is null) {
                 if (readOnly)

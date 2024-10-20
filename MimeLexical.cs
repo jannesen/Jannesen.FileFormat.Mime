@@ -198,7 +198,7 @@ namespace Jannesen.FileFormat.Mime
                 --End;
         }
 
-        public readonly string                  GetString(string str)
+        public readonly string?                 GetString(string str)
         {
             string  rtn;
 

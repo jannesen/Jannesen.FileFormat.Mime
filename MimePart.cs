@@ -7,7 +7,7 @@ namespace Jannesen.FileFormat.Mime
     public class MimePart : IMimeWriterTo
     {
         private             MimeFields              _fields;
-        private             byte[]                  _content;
+        private             byte[]?                 _content;
         private             int                     _contentLength;
 
         public              MimeFields              Fields
@@ -16,7 +16,7 @@ namespace Jannesen.FileFormat.Mime
                 return _fields;
             }
         }
-        public              string                  Name
+        public              string?                 Name
         {
             get {
                 try {
@@ -32,14 +32,19 @@ namespace Jannesen.FileFormat.Mime
                 return null;
             }
         }
-        public              MimeContentType         ContentType
+        public              MimeContentType?        ContentType
         {
             get {
                 return _fields.Get("Content-Type")?.ValueContentType;
             }
             set {
-                _setMimeVersion();
-                _fields.Set("Content-Type").ValueContentType = value;
+                if (value == null) {
+                    Fields.RemoveByName("Content-Type");
+                }
+                else {
+                    _setMimeVersion();
+                    _fields.Set("Content-Type").ValueContentType = value;
+                }
             }
         }
         public              MimeEncoding            ContentTransferEncoding
@@ -54,44 +59,64 @@ namespace Jannesen.FileFormat.Mime
                 Fields.Set("Content-Transfer-Encoding").Value = MimeEncodingToString(value);
             }
         }
-        public              MimeContentDisposition  ContentDisposition
+        public              MimeContentDisposition? ContentDisposition
         {
             get {
                 return _fields.Get("Content-Disposition")?.ValueContentDisposition;
             }
             set {
-                _setMimeVersion();
-                _fields.Set("Content-Disposition").ValueContentDisposition = value;
+                if (value == null) {
+                    Fields.RemoveByName("Content-Disposition");
+                }
+                else {
+                    _setMimeVersion();
+                    _fields.Set("Content-Disposition").ValueContentDisposition = value;
+                }
             }
         }
-        public              string                  ContentDescription
+        public              string?                 ContentDescription
         {
             get {
-                return _fields.Get("Content-Description").Value;
+                return _fields.Get("Content-Description")?.Value;
             }
             set {
-                _setMimeVersion();
-                _fields.Set("Content-Description").Value = value;
+                if (value == null) {
+                    Fields.RemoveByName("Content-Description");
+                }
+                else {
+                    _setMimeVersion();
+                    _fields.Set("Content-Description").Value = value;
+                }
             }
         }
-        public              string                  ContentLocation
+        public              string?                 ContentLocation
         {
             get {
                 return _fields.Get("Content-Location")?.Value;
             }
             set {
-                _setMimeVersion();
-                _fields.Set("Content-Location").Value = value;
+                if (value == null) {
+                    Fields.RemoveByName("Content-Location");
+                }
+                else {
+                    _setMimeVersion();
+                    _fields.Set("Content-Location").Value = value;
+                }
             }
         }
-        public              string                  ContentID
+        public              string?                 ContentID
         {
             get {
                 return _fields.Get("Content-ID")?.Value;
             }
             set {
-                _setMimeVersion();
-                _fields.Set("Content-ID").Value = "<" + value +">";
+                if (value == null) {
+                    Fields.RemoveByName("Content-ID");
+                }
+                else {
+                    _setMimeVersion();
+                    _fields.Set("Content-ID").Value = "<" + value +">";
+                }
             }
         }
         public              bool                    hasContent
@@ -116,7 +141,7 @@ namespace Jannesen.FileFormat.Mime
             _contentLength = content.Length;
         }
 
-        public              Stream                  GetContentStream()
+        public              Stream?                 GetContentStream()
         {
             return (_content != null) ? new MemoryStream(_content, 0, _contentLength, false) : null;
         }
@@ -176,7 +201,7 @@ namespace Jannesen.FileFormat.Mime
             return part;
         }
 
-        public  static      MimeEncoding            StringToMimeEncoding(string encodingText)
+        public  static      MimeEncoding            StringToMimeEncoding(string? encodingText)
         {
             if (encodingText == null)
                 return MimeEncoding.Text;
@@ -229,7 +254,6 @@ namespace Jannesen.FileFormat.Mime
         internal virtual    void                    WriteContentTo(MimeWriter writer)
         {
             ArgumentNullException.ThrowIfNull(writer);
-
             writer.WriteContent(_content, _contentLength, ContentTransferEncoding);
         }
 

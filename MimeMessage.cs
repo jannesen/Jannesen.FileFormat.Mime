@@ -9,10 +9,10 @@ namespace Jannesen.FileFormat.Mime
 {
     public class MimeMessage: MimeMultiPart
     {
-        private             string              _body;
-        private readonly    string              _messageGUID;
+        private             string?             _body;
+        private readonly    string?             _messageGUID;
 
-        public              string              Body
+        public              string?             Body
         {
             get {
                 return _body;
@@ -24,49 +24,69 @@ namespace Jannesen.FileFormat.Mime
                 _body = value;
             }
         }
-        public              string              MessageGUID
+        public              string?             MessageGUID
         {
             get {
                 return _messageGUID;
             }
         }
-        public              MimeAddress         From
+        public              MimeAddress?        From
         {
             get {
                 return Fields.Get("From")?.ValueAddress;
             }
             set {
-                Fields.Set("From").ValueAddress = value;
+                if (value == null) {
+                    Fields.RemoveByName("From");
+                }
+                else {
+                    Fields.Set("From").ValueAddress = value;
+                }
             }
         }
-        public              MimeAddresses       To
+        public              MimeAddresses?      To
         {
             get {
                 return Fields.Get("To")?.ValueAddresses;
             }
             set {
-                Fields.Set("To").ValueAddresses = value;
+                if (value == null) {
+                    Fields.RemoveByName("To");
+                }
+                else {
+                    Fields.Set("To").ValueAddresses = value;
+                }
             }
         }
-        public              MimeAddresses       Cc
+        public              MimeAddresses?      Cc
         {
             get {
-                return Fields.Get("Cc").ValueAddresses;
+                return Fields.Get("Cc")?.ValueAddresses;
             }
             set {
-                Fields.Set("Cc").ValueAddresses = value;
+                if (value == null) {
+                    Fields.RemoveByName("Cc");
+                }
+                else {
+                    Fields.Set("Cc").ValueAddresses = value;
+                }
             }
         }
-        public              MimeAddresses       Bcc
+        public              MimeAddresses?      Bcc
         {
             get {
                 return Fields.Get("Bcc")?.ValueAddresses;
             }
             set {
-                Fields.Set("Bcc").ValueAddresses = value;
+                if (value == null) {
+                    Fields.RemoveByName("Bcc");
+                }
+                else {
+                    Fields.Set("Bcc").ValueAddresses = value;
+                }
             }
         }
-        public              MimeAddress         Sender
+        public              MimeAddress?        Sender
         {
             get {
                 var fld = Fields.Get("Sender")
@@ -74,10 +94,15 @@ namespace Jannesen.FileFormat.Mime
                 return fld?.ValueAddress;
             }
             set {
-                Fields.Set("Sender").ValueAddress = value;
+                if (value == null) {
+                    Fields.RemoveByName("Sender");
+                }
+                else {
+                    Fields.Set("Sender").ValueAddress = value;
+                }
             }
         }
-        public              MimeAddress         ReplyAddress
+        public              MimeAddress?        ReplyAddress
         {
             get {
                 var fld = Fields.Get("Reply-To")
@@ -86,10 +111,15 @@ namespace Jannesen.FileFormat.Mime
                 return fld?.ValueAddress;
             }
             set {
-                Fields.Set("Reply-To").ValueAddress = value;
+                if (value == null) {
+                    Fields.RemoveByName("Reply-To");
+                }
+                else {
+                    Fields.Set("Reply-To").ValueAddress = value;
+                }
             }
         }
-        public              string              MessageID
+        public              string?             MessageID
         {
             get {
                 var ID = Fields.Value("Message-ID");
@@ -101,10 +131,11 @@ namespace Jannesen.FileFormat.Mime
                 return ID;
             }
             set {
+                if (value == null) throw new InvalidOperationException("Message-ID cannot be null.");
                 Fields.Set("Message-ID").Value = "<" + value + ">";
             }
         }
-        public              string              Subject
+        public              string?             Subject
         {
             get {
                 return Fields["Subject"]?.Value;
@@ -123,7 +154,7 @@ namespace Jannesen.FileFormat.Mime
                 Fields.Set("Date").ValueDateTime = value;
             }
         }
-        public              string              MimeVersion
+        public              string?             MimeVersion
         {
             get {
                 return Fields.Value("MIME-Version");

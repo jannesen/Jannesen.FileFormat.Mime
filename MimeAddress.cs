@@ -7,11 +7,11 @@ namespace Jannesen.FileFormat.Mime
 {
     public class MimeAddress: IMimeWriterTo
     {
-        private             string              _address;
-        private             string              _displayName;
+        private             string?             _address;
+        private             string?             _displayName;
         private readonly    bool                _readOnly;
 
-        public              string              Address
+        public              string?             Address
         {
             get {
                 return _address;
@@ -23,7 +23,7 @@ namespace Jannesen.FileFormat.Mime
                 _address = value;
             }
         }
-        public              string              DisplayName
+        public              string?             DisplayName
         {
             get {
                 return _displayName;
@@ -44,12 +44,12 @@ namespace Jannesen.FileFormat.Mime
             _address     = address;
             _displayName = null;
         }
-        public                                  MimeAddress(string address, string displayName)
+        public                                  MimeAddress(string address, string? displayName)
         {
             _address     = address;
             _displayName = (displayName != null && displayName.Length > 0) ? displayName : null;
         }
-        public                                  MimeAddress(string address, string displayName, bool readOnly)
+        public                                  MimeAddress(string address, string? displayName, bool readOnly)
         {
             _address     = address;
             _displayName = (displayName != null && displayName.Length > 0) ? displayName : null;
@@ -60,7 +60,7 @@ namespace Jannesen.FileFormat.Mime
         {
             return Parse(mimeAddressString, false);
         }
-        internal static     MimeAddress         Parse(string mimeAddressString, bool readOnly)
+        internal static     MimeAddress         Parse(string? mimeAddressString, bool readOnly)
         {
             if (mimeAddressString == null) {
                 if (readOnly)
@@ -166,7 +166,8 @@ namespace Jannesen.FileFormat.Mime
             if (curToken.Type != MimeLexicalTokenType.EOL && curToken.Type != MimeLexicalTokenType.WhiteSpace)
                 position = curToken.Begin;
 
-            return new MimeAddress(addressesToken.GetString(mimeAddressString), displayNameToken.GetString(mimeAddressString), readOnly);
+            return new MimeAddress(addressesToken.GetString(mimeAddressString) ?? throw new InvalidOperationException("Parse failed."),
+                                   displayNameToken.GetString(mimeAddressString), readOnly);
         }
 
         public              bool                WriteHasData
@@ -178,7 +179,9 @@ namespace Jannesen.FileFormat.Mime
         public              void                WriteTo(MimeWriter writer)
         {
             ArgumentNullException.ThrowIfNull(writer);
-            writer.WriteAddress(_address, _displayName);
+            if (_address != null) {
+                writer.WriteAddress(_address, _displayName);
+            }
         }
 
         public  override    string              ToString()

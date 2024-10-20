@@ -7,11 +7,11 @@ namespace Jannesen.FileFormat.Mime
 {
     public class MimeParameterField : IMimeWriterTo
     {
-        private             string              _type;
-        private             MimeFields          _parameters;
+        private             string?             _type;
+        private             MimeFields?         _parameters;
         private             bool                _readOnly;
 
-        public              string              Type
+        public              string?             Type
         {
             get {
                 return _type;
@@ -91,7 +91,7 @@ namespace Jannesen.FileFormat.Mime
                     rtn.Append(Parameter.Name);
                     rtn.Append('=');
                     rtn.Append('"');
-                    rtn.Append(Parameter.Value.Replace("\"", "\"\""));
+                    rtn.Append(Parameter.Value?.Replace("\"", "\"\""));
                     rtn.Append('"');
                 }
             }
@@ -103,7 +103,7 @@ namespace Jannesen.FileFormat.Mime
         {
             _type = type;
         }
-        protected           void                MimeParse(string mimeValue, bool readOnly)
+        protected           void                MimeParse(string? mimeValue, bool readOnly)
         {
             var Position = 0;
 
@@ -142,7 +142,8 @@ namespace Jannesen.FileFormat.Mime
                     if (_parameters == null)
                         _parameters = new MimeFields();
 
-                    _parameters.Add(new MimeField(nameToken.GetString(mimeValue), valueToken.GetString(mimeValue)));
+                    _parameters.Add(new MimeField(nameToken.GetString(mimeValue) ?? throw new InvalidOperationException("Parse failed."),
+                                                  valueToken.GetString(mimeValue)));
                 }
 
                 if (sepToken.Type != MimeLexicalTokenType.EOL)

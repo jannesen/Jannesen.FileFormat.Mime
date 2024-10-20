@@ -68,7 +68,7 @@ namespace Jannesen.FileFormat.Mime
 
             return fields;
         }
-        public              byte[]          ReadData(MimeEncoding encoding, string boundary)
+        public              byte[]          ReadData(MimeEncoding encoding, string? boundary)
         {
             using(var dataStream = new MemoryStream()) {
                 while (true) {

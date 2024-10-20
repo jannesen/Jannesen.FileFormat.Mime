@@ -46,10 +46,10 @@ namespace Jannesen.FileFormat.Mime
         public              bool                isMultipart
         {
             get {
-                return Type.Length>10 && string.Compare(Type, 0, "multipart/", 0, 10, StringComparison.OrdinalIgnoreCase)==0;
+                return Type != null && Type.Length>10 && string.Compare(Type, 0, "multipart/", 0, 10, StringComparison.OrdinalIgnoreCase)==0;
             }
         }
-        public              string              Boundary
+        public              string?             Boundary
         {
             get {
                 return Parameters.Value("boundary");
@@ -58,7 +58,7 @@ namespace Jannesen.FileFormat.Mime
                 Parameters.Set("boundary").Value = value;
             }
         }
-        public              string              Charset
+        public              string?             Charset
         {
             get {
                 return Parameters.Value("charset");
@@ -78,7 +78,7 @@ namespace Jannesen.FileFormat.Mime
                 return Encoding.GetEncoding(charset);
             }
         }
-        public              string              Name
+        public              string?             Name
         {
             get {
                 return Parameters.Value("name");
@@ -98,11 +98,11 @@ namespace Jannesen.FileFormat.Mime
                 Boundary = "boundary_" + System.Guid.NewGuid().ToString().Replace("-", "");
         }
 
-        internal static new MimeContentType     Parse(string mimeValue)
+        internal static new MimeContentType     Parse(string? mimeValue)
         {
             return Parse(mimeValue, false);
         }
-        internal static new MimeContentType     Parse(string mimeValue, bool readOnly)
+        internal static new MimeContentType     Parse(string? mimeValue, bool readOnly)
         {
             var rtn = new MimeContentType();
 

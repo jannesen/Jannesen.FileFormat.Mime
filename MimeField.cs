@@ -7,8 +7,8 @@ namespace Jannesen.FileFormat.Mime
     public  class MimeField
     {
         private readonly    string                  _name;
-        private             string                  _value;
-        private             object                  _valueObject;
+        private             string?                 _value;
+        private             object?                 _valueObject;
         private readonly    bool                    _readOnly;
 
         public              string                  Name
@@ -17,11 +17,11 @@ namespace Jannesen.FileFormat.Mime
                 return _name;
             }
         }
-        public              string                  Value
+        public              string?                 Value
         {
             get {
                 if (!_readOnly && _valueObject != null)
-                    return _valueObject.ToString();
+                    return _valueObject.ToString()!;
 
                 return _value;
             }
@@ -101,7 +101,7 @@ namespace Jannesen.FileFormat.Mime
         {
             get {
                 try {
-                    var str = Value;
+                    var str = Value ?? throw new InvalidOperationException("Value is empty.");
                     var i = str.IndexOf(',');
 
                 // Remove weekday
@@ -177,13 +177,13 @@ namespace Jannesen.FileFormat.Mime
             }
         }
 
-        public                                      MimeField(string name, string value)
+        public                                      MimeField(string name, string? value)
         {
             _name     = name;
             _value    = value;
             _readOnly = false;
         }
-        public                                      MimeField(string name, string value, bool readOnly)
+        public                                      MimeField(string name, string? value, bool readOnly)
         {
             _name     = name;
             _value    = value;
@@ -211,7 +211,7 @@ namespace Jannesen.FileFormat.Mime
     {
         private             bool                    _readOnly;
 
-        public              MimeField               this[string name]
+        public              MimeField?              this[string name]
         {
             get {
                 for (var i = 0 ; i < Count ; ++i) {
@@ -276,6 +276,15 @@ namespace Jannesen.FileFormat.Mime
 
             base.Remove(field);
         }
+        public              void                    RemoveByName(string name)
+        {
+            for (var i = 0 ; i < Count ; ++i) {
+                if (string.Equals(base[i].Name, name, StringComparison.OrdinalIgnoreCase)) {
+                    this.RemoveAt(i);
+                    break;
+                }
+            }
+        }
         public  new         void                    RemoveAll(Predicate<MimeField> match)
         {
             if (_readOnly)
@@ -291,7 +300,7 @@ namespace Jannesen.FileFormat.Mime
             base.RemoveAt(Index);
         }
 
-        public              MimeField               Get(string name)
+        public              MimeField?              Get(string name)
         {
             var fld = this[name];
 
@@ -316,18 +325,13 @@ namespace Jannesen.FileFormat.Mime
 
             return fld;
         }
-        public              string                  Value(string name)
+        public              string?                 Value(string name)
         {
-            var fld = this[name];
-
-            if (fld!=null)
-                return fld.Value;
-
-            return null;
+            return this[name]?.Value;
         }
-        public              string[]                Values(string name)
+        public              string?[]               Values(string name)
         {
-            var rtn = new List<string>();
+            var rtn = new List<string?>();
 
             for (var i = 0 ; i < Count ; ++i) {
                 if (string.Equals(base[i].Name, name, StringComparison.OrdinalIgnoreCase)) {

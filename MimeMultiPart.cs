@@ -6,9 +6,9 @@ namespace Jannesen.FileFormat.Mime
 {
     public class MimeMultiPart: MimePart
     {
-        private             MimeParts           _parts;
+        private             MimeParts?          _parts;
 
-        public              MimeParts           Parts
+        public              MimeParts?          Parts
         {
             get {
                 if (_parts == null && !Fields.ReadOnly)
@@ -26,7 +26,7 @@ namespace Jannesen.FileFormat.Mime
             ParseMultiPart(contentType, new MimeReader(new MemoryStream(content)), null);
         }
 
-        protected           void                ParseMultiPart(MimeContentType contentType, MimeReader reader, StringWriter bodyWriter)
+        protected           void                ParseMultiPart(MimeContentType contentType, MimeReader reader, StringWriter? bodyWriter)
         {
             ArgumentNullException.ThrowIfNull(contentType);
             ArgumentNullException.ThrowIfNull(reader);
@@ -82,15 +82,20 @@ namespace Jannesen.FileFormat.Mime
         }
         internal override   void                WriteContentTo(MimeWriter writer)
         {
-            var FldContentType = Fields["Content-Type"];
+            var contentType = Fields["Content-Type"]?.ValueContentType;
 
-            if (FldContentType != null && FldContentType.ValueContentType.isMultipart) {
+            if (contentType != null && contentType.isMultipart) {
+                var boundary = contentType.Boundary ?? throw new InvalidOperationException("Multipart ContentType has no boundary.");
+
+                if (_parts == null || _parts.Count == 0)
+                    throw new MimeException("multipart without parts.");
+
                 for (var i = 0 ; i < _parts.Count ; ++i) {
-                    writer.WriteBoundary(ContentType.Boundary, false);
+                    writer.WriteBoundary(boundary, false);
                     _parts[i].WriteTo(writer);
                 }
 
-                writer.WriteBoundary(ContentType.Boundary, true);
+                writer.WriteBoundary(boundary, true);
             }
             else {
                 if (_parts != null && _parts.Count > 0)

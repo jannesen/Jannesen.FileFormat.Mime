@@ -23,7 +23,7 @@ namespace Jannesen.FileFormat.Mime
                 SetType(Attachment);
             }
         }
-        public              string                  FileName
+        public              string?                 FileName
         {
             get {
                 return Parameters.Value("filename");
@@ -45,7 +45,7 @@ namespace Jannesen.FileFormat.Mime
         {
             return Parse(mimeValue, false);
         }
-        public  static new  MimeContentDisposition  Parse(string mimeValue, bool readOnly)
+        public  static new  MimeContentDisposition  Parse(string? mimeValue, bool readOnly)
         {
             var rtn = new MimeContentDisposition();
 

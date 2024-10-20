@@ -18,7 +18,7 @@ namespace Jannesen.FileFormat.Mime
                                                                         'Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f',
                                                                         'g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v',
                                                                         'w','x','y','z','0','1','2','3','4','5','6','7','8','9','+','/' ];
-        private             StreamWriter        _writer;
+        private readonly    StreamWriter        _writer;
         private             int                 _linePos;
 
         public                                  MimeWriter(Stream stream)
@@ -27,13 +27,10 @@ namespace Jannesen.FileFormat.Mime
         }
         public              void                Dispose()
         {
-            if (_writer != null) {
-                _writer.Dispose();
-                _writer = null;
-            }
+            _writer.Dispose();
         }
 
-        internal            void                WriteHeaderField(string name, string value)
+        internal            void                WriteHeaderField(string name, string? value)
         {
             if (value != null && value.Length > 0) {
                 _write(name);
@@ -59,18 +56,18 @@ namespace Jannesen.FileFormat.Mime
             }
 
         }
-        internal            void                WriteFieldValue(string value)
+        internal            void                WriteFieldValue(string? value)
         {
             _write(value);
         }
         internal            void                WriteFieldParameter(MimeField parameter)
         {
             var Name  = parameter.Name;
-            var Value = parameter.Value.Replace("\"", "\"\"");
+            var Value = parameter.Value?.Replace("\"", "\"\"");
 
             _write(';');
 
-            if (_linePos + Name.Length + Value.Length + 5 >= MaxLineWidth) {
+            if (_linePos + Name.Length + (Value?.Length ?? 0) + 5 >= MaxLineWidth) {
                 WriteNewLine();
                 _write("\t");
             }
@@ -83,7 +80,7 @@ namespace Jannesen.FileFormat.Mime
             _write(Value);
             _write('"');
         }
-        internal            void                WriteAddress(string address, string displayName)
+        internal            void                WriteAddress(string address, string? displayName)
         {
             if (displayName != null) {
                 _write('\"');
@@ -110,29 +107,31 @@ namespace Jannesen.FileFormat.Mime
         }
         internal            void                WriteBody(string body)
         {
-            var b = System.Text.Encoding.ASCII.GetBytes(body);
+            var b = Encoding.ASCII.GetBytes(body);
 
             _writeContent_Text(b, b.Length);
         }
-        internal            void                WriteContent(byte[] content, int contentLength, MimeEncoding encoding)
+        internal            void                WriteContent(byte[]? content, int contentLength, MimeEncoding encoding)
         {
-            switch(encoding) {
-            case MimeEncoding.Text:
-            case MimeEncoding.Text7bit:
-            case MimeEncoding.Text8bit:
-                _writeContent_Text(content, contentLength);
-                break;
+            if (content != null && contentLength > 0) {
+                switch(encoding) {
+                case MimeEncoding.Text:
+                case MimeEncoding.Text7bit:
+                case MimeEncoding.Text8bit:
+                    _writeContent_Text(content, contentLength);
+                    break;
 
-            case MimeEncoding.QuotedPrintable:
-                _writeContent_QuotedPrintable(content, contentLength);
-                break;
+                case MimeEncoding.QuotedPrintable:
+                    _writeContent_QuotedPrintable(content, contentLength);
+                    break;
 
-            case MimeEncoding.Base64:
-                _writeContent_Base64(content, contentLength);
-                break;
+                case MimeEncoding.Base64:
+                    _writeContent_Base64(content, contentLength);
+                    break;
 
-            default:
-                throw new NotImplementedException("Not implemented WriteContent '"+encoding.ToString()+"' not implemented.");
+                default:
+                    throw new NotImplementedException("Not implemented WriteContent '"+encoding.ToString()+"' not implemented.");
+                }
             }
         }
         internal            void                WriteBoundary(string boundary, bool end)
@@ -291,7 +290,7 @@ encode:             {
             if (w > 0)
                 WriteNewLine();
         }
-        private static      Encoding            _findCharset(string str)
+        private static      Encoding?           _findCharset(string str)
         {
             for (var i = 0 ; i < str.Length ; ++i) {
                 if (str[i] >= 0x7F) {
@@ -333,7 +332,7 @@ encode:             {
             _writer.Write(c);
             _linePos++;
         }
-        private             void                _write(string s)
+        private             void                _write(string? s)
         {
             if (s != null) {
                 _writer.Write(s);
