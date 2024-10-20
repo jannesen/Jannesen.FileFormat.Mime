@@ -48,10 +48,10 @@ namespace Jannesen.FileFormat.Mime
             while (ReadLine(true) && _curLength>0) {
                 int i = _curLineIndexOf(':');
                 if (i<0)
-                    throw new MimeException("Syntax error in field ':' not found).");
+                    throw new MimeReaderException("Syntax error in field ':' not found).");
 
                 if (i<_curLength-1 && _curLine[i+1] != ' ')
-                    throw new MimeException("Syntax error in field ': ' not found).");
+                    throw new MimeReaderException("Syntax error in field ': ' not found).");
 
                 string  Name  = _curLineToString(0, i);
                 string  Value = _curLineToString(i+2, _curLength-(i+2));
@@ -140,7 +140,7 @@ namespace Jannesen.FileFormat.Mime
 
                 if (c != '\r') {
                     if (pos >= _curLine.Length)
-                        throw new MimeException("Invalid mime-message, line to long.");
+                        throw new MimeReaderException("Invalid mime-message, line to long.");
 
                     _curLine[pos++] = (char)c;
                 }
@@ -242,14 +242,14 @@ namespace Jannesen.FileFormat.Mime
                             n = (i * 6 / 8);
                     }
                     else
-                        throw new MimeException("Bad base64 data.");
+                        throw new MimeReaderException("Bad base64 data.");
 
                     ++i;
                 }
 
                 if (i<4) {
                     if (n > (i * 6 / 8))
-                        throw new MimeException("Bad base64 data.");
+                        throw new MimeReaderException("Bad base64 data.");
                 }
 
                 _decode_buf_out[0] = (byte)(_decode_buf_in[0]<<2 | _decode_buf_in[1]>>4);
@@ -268,7 +268,7 @@ namespace Jannesen.FileFormat.Mime
                 int     n   = (_curLine[0] - 32);
 
                 if (n<0 || n>64)
-                    throw new MimeException("Bad UUEncoded data.");
+                    throw new MimeReaderException("Bad UUEncoded data.");
 
                 for (int b = 0 ; b < n ; b+=3) {
                     for (int i = 0 ; i < 4 ; ++i) {
@@ -276,7 +276,7 @@ namespace Jannesen.FileFormat.Mime
                             int     c = _curLine[pos++];
 
                             if (c < 32 || c >= 32+64)
-                                throw new MimeException("Bad UUEncoded data.");
+                                throw new MimeReaderException("Bad UUEncoded data.");
 
                             _decode_buf_in[i] = (byte)(c-32);
                         }
