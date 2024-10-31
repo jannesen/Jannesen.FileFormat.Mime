@@ -304,7 +304,7 @@ namespace Jannesen.FileFormat.Mime
         {
             var fld = this[name];
 
-            if (fld==null && !_readOnly) {
+            if (fld == null && !_readOnly) {
                 fld = new MimeField(name, null);
                 base.Add(fld);
             }
