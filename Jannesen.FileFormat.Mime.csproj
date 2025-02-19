@@ -4,7 +4,7 @@
         <AssemblyName>Jannesen.FileFormat.Mime</AssemblyName>
 
         <OutputType>Library</OutputType>
-        <TargetFrameworks>net8</TargetFrameworks>
+        <TargetFramework>net9</TargetFramework>
         <InvariantGlobalization>true</InvariantGlobalization>
         <Platforms>AnyCPU</Platforms>
 
