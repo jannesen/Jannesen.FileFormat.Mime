@@ -56,11 +56,11 @@ namespace Jannesen.FileFormat.Mime
             _readOnly    = readOnly;
         }
 
-        internal static     MimeAddress         Parse(string mimeAddressString)
+        public  static      MimeAddress         Parse(string mimeAddressString)
         {
             return Parse(mimeAddressString, false);
         }
-        internal static     MimeAddress         Parse(string? mimeAddressString, bool readOnly)
+        public  static      MimeAddress         Parse(string? mimeAddressString, bool readOnly)
         {
             if (mimeAddressString == null) {
                 if (readOnly)
